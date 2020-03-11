@@ -10,7 +10,7 @@ const Base64 = require('js-base64').Base64;
  * EXAMPLE AFTER ENCODING: LightK_O_REA_0_100_S3VjaHnFiA_U3bEm3Rsbw
  *
  * */
-module.exports = class SimpleDataSource {
+export class SimpleDataSource {
     get dataSourceString() {
         return this._dataSourceString;
     }
@@ -78,13 +78,12 @@ module.exports = class SimpleDataSource {
         this._name = getPartOfSimpleDSSWithValueCheck(dataSourceString, 6, "name");
     }
 
-};
+}
 
 // DSS = Data Source String
 function getPartOfSimpleDSS(string, part) {
     return string.split("_")[part];
 }
-
 
 const ERROR_STRING = "Simple data source string does not contain ";
 function getPartOfSimpleDSSWithValueCheck(string, part, doesNotContain) {
