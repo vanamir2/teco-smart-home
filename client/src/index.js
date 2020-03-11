@@ -298,12 +298,12 @@ ReactDOM.render(
 );
 
 function executeAtInterval(fn, timeout, interval) {
-    let startTime = (new Date()).getTime();
+    let startTime = Date.now();
     let intervalUsed = interval || 1000;
     let canPoll = true;
 
     (function p() {
-        canPoll = ((new Date()).getTime() - startTime) <= timeout;
+        canPoll = (Date.now() - startTime) <= timeout;
         if (!fn() && canPoll) { // ensures the function exucutes
             setTimeout(p, intervalUsed);
         }
