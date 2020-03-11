@@ -22,7 +22,7 @@ const TECOAPI_USERNAME = constants.TECOAPI_USERNAME;
 const TECOAPI_PW = constants.TECOAPI_PW;
 
 /* GET home page. */
-router.get('/', function (req, res) {
+router.get('/express', function (req, res) {
     res.render('index', {title: 'TecoRoute backend.'});
 })  ;
 
