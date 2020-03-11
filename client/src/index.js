@@ -168,6 +168,8 @@ class Main extends React.Component {
 
     createRoomGrid() {
         let gridElements = [];
+        if(this.state.roomToSDSmap === undefined )
+            return <div className="loader"></div>;
         for (const [key] of this.state.roomToSDSmap.entries())
             gridElements.push(<GridItem.Room className="grid-item"
                                              key={key} name={key}

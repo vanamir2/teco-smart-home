@@ -1,5 +1,5 @@
 
-const SimpleDataSource = require('./SimpleDataSource');
+const SimpleDataSource = require('./SimpleDataSource').SimpleDataSource;
 
 // DSS = Data Source String
 /**
