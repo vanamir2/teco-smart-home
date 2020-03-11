@@ -13,7 +13,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ---------------------- ENDPOINTS
-app.use('/', require('./routes/index'));
+app.use('/backend', require('./routes/index'));
 
 // IMPORTANT - enables client routing
 if (process.env.NODE_ENV === 'production') {
