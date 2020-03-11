@@ -13,6 +13,7 @@ Logger.setLogLevel(Logger.LogLevels.DEBUG);
 const GET_LIST_OF_OBJECTS = "GetList";
 const THERMOSTAT_TEMP = 'tempTherm';
 const MS_TO_S = 1000;
+const IS_PRODUCTION_ENVIRONMENT = process.env.NODE_ENV === 'production';
 
 //http://192.168.134.176/TecoApi/GetList
 class Main extends React.Component {
@@ -149,6 +150,9 @@ class Main extends React.Component {
 
     createLoginForm() {
         let loginForm;
+        let localHostSwitch = !IS_PRODUCTION_ENVIRONMENT ?
+            <Login.LocalhostSwitch checked={this.state.isLocalhostSwitchOn} handleChange={this.handleLocalhostChange}/>
+            : "";
         if (this.state.isLocalhostSwitchOn)
             loginForm = Login.createLocalhostLoginForm(this.handleChange, this.handleSubmit, this.state.ipAddress, this.state.username, this.state.password);
         else // predelat handle change
@@ -157,10 +161,7 @@ class Main extends React.Component {
         return (
             <div className="login-form">
                 <h1>Teco connection</h1>
-                <Login.LocalhostSwitch
-                    checked={this.state.isLocalhostSwitchOn}
-                    handleChange={this.handleLocalhostChange}
-                />
+                {localHostSwitch}
                 {loginForm}
             </div>
         );
@@ -168,7 +169,7 @@ class Main extends React.Component {
 
     createRoomGrid() {
         let gridElements = [];
-        if(this.state.roomToSDSmap === undefined )
+        if (this.state.roomToSDSmap === undefined)
             return <div className="loader"></div>;
         for (const [key] of this.state.roomToSDSmap.entries())
             gridElements.push(<GridItem.Room className="grid-item"
