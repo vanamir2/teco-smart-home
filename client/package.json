@@ -1,0 +1,45 @@
+{
+  "name": "teco-smart-home-frontend",
+  "version": "0.1.0",
+  "private": false,
+  "author": {
+    "name": "Miroslav Váňa"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "cors": "^2.8.5",
+    "fetch": "^1.0.0",
+    "js-base64": "^2.5.2",
+    "logplease": "^1.2.15",
+    "md5": "^2.2.1",
+    "react": "^16.6.3",
+    "react-bootstrap": "^1.0.0-beta.16",
+    "react-dom": "^16.6.3",
+    "react-scripts": "^3.3.0",
+    "react-switch": "^5.0.1",
+    "request-digest": "^1.0.13",
+    "unit.js": "^2.1.1"
+  },
+  "proxy": "http://localhost:5000/",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "mocha --require js-base64",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

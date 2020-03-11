@@ -1,0 +1,7 @@
+# Default ignored files
+.idea
+/node_modules/
+/package-lock.json
+
+# Project exclude paths
+/client/node_modules/
