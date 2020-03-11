@@ -1,12 +1,7 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-
-var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));

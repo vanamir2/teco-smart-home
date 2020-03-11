@@ -23,8 +23,8 @@ const TECOAPI_PW = constants.TECOAPI_PW;
 
 /* GET home page. */
 router.get('/express', function (req, res) {
-    res.render('index', {title: 'TecoRoute backend.'});
-})  ;
+    res.send('Answer from Express server.')
+});
 
 router.get('/test', (req, res) => {
     let url = "http://route.tecomat.com:61682/TecoApi/GetList";
@@ -70,7 +70,7 @@ router.post('/TecoApi', (req, res) => {
 
 // webhook test - request is accepted
 router.post('/webhook', (req, res, next) => {
-    handleWebHook(req,res);
+    handleWebHook(req, res);
 });
 
 

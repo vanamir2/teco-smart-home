@@ -21,7 +21,6 @@
     "http-errors": "~1.6.3",
     "logplease": "^1.2.15",
     "node-fetch": "^2.6.0",
-    "pug": "2.0.0-beta11",
     "http-parser-js": "^0.5.2",
     "form-data": "^3.0.0",
     "md5": "^2.2.1",

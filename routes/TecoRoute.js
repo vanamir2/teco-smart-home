@@ -9,6 +9,24 @@ var constants = require('./constants');
 const TECOROUTE_LOGIN_TEMPLATE = "USER={0}&PASS={1}&PLC={2}";
 const TECOROUTE_URL = "http://route.tecomat.com:61682/TR_LOGIN.XML";
 
+function isStatusOk(res,reject,result){
+    if (res.status === 500) {
+        if (reject !== undefined)
+            reject("Rejected. PLC is offline. Ensure that PLC is connected to network and try it again.");
+        else
+            result.status(500).send('PLC is offline. Ensure that PLC is connected to network and try it again.');
+        return false;
+    }
+    if (res.status === 200) {
+        if (reject !== undefined)
+            reject("TecoRoute - login or PLC name is incorrect.");
+        else
+            result.status(500).send("TecoRoute - login or PLC name is incorrect.");
+        return false;
+    }
+    return true;
+}
+
 /** Returns cookie necessary to log via tecoRoute. */
 module.exports.tecoRouteLogin = function tecoRouteLogin(result, tecoRouteUsername, tecoRoutePw, tecoRoutePlc, resolve, reject) {
     logger.debug("--------------- TecoRoute login - sending 1st request ---------------------");
@@ -19,14 +37,8 @@ module.exports.tecoRouteLogin = function tecoRouteLogin(result, tecoRouteUsernam
         // 2nd request - send cookies (RoutePLC,RouteLinkSave) and formData(username,password,PLC name)
         fetch(TECOROUTE_URL, getTecoRoute2ndRequest(routePLC, tecoRouteLogin)).then(res => {
             logger.debug("TecoRoute login - processing 2st request. Its status is: " + res.status);
-            if (res.status === 500) {
-                logger.debug(res);
-                if (reject !== undefined)
-                    reject("Rejected. PLC is offline. Ensure that PLC is connected to network and try it again.");
-                else
-                    result.status(500).send('PLC is offline. Ensure that PLC is connected to network and try it again.');
+            if(!isStatusOk(res,reject,result))
                 return;
-            }
             let softPLC = module.exports.getSoftPLC(getCookieString(res.headers));
             if (resolve !== undefined)
                 resolve({"routePLC": routePLC, "softPLC": softPLC});

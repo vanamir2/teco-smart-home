@@ -34,7 +34,7 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
     logger.debug('---- Sending 1st request to TecoApi');
     fetch(targetUrl, {headers: {Cookie: constants.COOKIE_STRING.format(routePLC, softPLC)},}).then(data => {
         if (hasLoginError(data,res)) return;
-        logger.debug('Data received from 1st TecoApi request: ');
+        logger.debug('Data received from 1st TecoApi request. Its status is: ' + data.status );
         logger.debug(data);
         const authorizationTemplate = getAuthorizationTemplate(data.headers, targetUrl, username, password);
         logger.debug('---- Sending 2nd request to TecoApi');
@@ -46,8 +46,11 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
         }).then((res) => res.text())
             .then((text) => text.length ? JSON.parse(text) : {})
             .then(data => {
-                logger.debug('Data received from 2nd TecoApi request =');
+                logger.debug('Data received from 2st TecoApi request.');
                 logger.debug(data);
+                if(data.error !== undefined){
+                    res.status(500).send("Error while performing TecoApi request.\n\nError=" + JSON.stringify(data.error));
+                }
                 if (doOnSuccess === null || doOnSuccess === undefined)
                     res.send(data);
                 else
@@ -58,6 +61,7 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
         if (doOnSuccess === null)
             res.status(401).send('Error while performing TecoApi request. Try to refresh page and perform new login.');
         else
+            // TODO - aktualne na nic funkce createTextResponse neodkazuje, protoze byl refactor do jine tridy
             res.send(createTextResponse("Something went wrong."));
     });
 };

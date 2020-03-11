@@ -143,7 +143,7 @@ class Main extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        this.sendFirstRequestToTecoApi(GET_LIST_OF_OBJECTS);
+        //this.sendFirstRequestToTecoApi(GET_LIST_OF_OBJECTS);
         // keep connection active - perform TecoRoute in defined interval
         executeAtInterval(() => this.sendFirstRequestToTecoApi(GET_LIST_OF_OBJECTS), 10 * MS_TO_S, 120 * MS_TO_S);
     }
