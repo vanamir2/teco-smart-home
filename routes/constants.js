@@ -1,7 +1,7 @@
 // https://stackoverflow.com/questions/8595509/how-do-you-share-constants-in-nodejs-modules
 module.exports = Object.freeze({
     //SDSS
-    SDSS_ROOM_TEMPERATURE: 'tempTherm_O_INT_m50_100_Uk9PTTIK_VGVwbG90YSB0ZXJtb3N0YXQ',
+    SDSS_ROOM_TEMPERATURE: 'releTemp_I_REA_NA_NA_Uk9PTTIK_VGVwbG9txJty',
     SDSS_THERM_TEMPERATURE: 'tempTherm_O_INT_m50_100_Uk9PTTIK_VGVwbG90YSB0ZXJtb3N0YXQ',
     SDSS_LEFT_LIGHT: 'light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_TGV2w6EgTEVE',
     SDSS_THERM_STATE: 'thermState_O_BOO_0_1_Uk9PTTIK_VGVybW9zdGF0IE9OL09GRg',
