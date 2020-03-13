@@ -19,6 +19,33 @@ module.exports = Object.freeze({
     TECOROUTE_PLC: "kufr01",
     TECOAPI_USERNAME: "admin",
     TECOAPI_PW: "admin",
+
+    // Google assistant error response
+    GA_ERROR_RESPONSE :  {
+        "fulfillmentText": "This is a text response",
+        "fulfillmentMessages": [
+            {
+                "text": {
+                    "text": "Something went wrong."
+                }
+            }
+        ],
+        "source": "example.com",
+        "payload": {
+            "google": {
+                "expectUserResponse": true,
+                "richResponse": {
+                    "items": [
+                        {
+                            "simpleResponse": {
+                                "textToSpeech": "Something went wrong."
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
 });
 
 // https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format

@@ -1,15 +1,12 @@
-process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const fetch = require('node-fetch');
 const logger = require('logplease').create('TecoApi');
 const md5 = require("md5");
 const constants = require('./constants');
-const createTextResponse = require("./GoogleAssistant").createTextResponse;
 
 const CNONCE_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const TECOAPI_REALM = "TecoApi";
 const TECOAPI_QOP = "auth";
 const TECOAPI_HTTP_METHOD = 'GET';
-
 
 function hasLoginError(data, res) {
     if (data.status === 403) {
@@ -62,8 +59,7 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
         if (doOnSuccess === null)
             res.status(401).send('Error while performing TecoApi request. Try to refresh page and perform new login.');
         else
-            // TODO - aktualne na nic funkce createTextResponse neodkazuje, protoze byl refactor do jine tridy
-            res.send(createTextResponse("Something went wrong."));
+            res.send(constants.GA_ERROR_RESPONSE);
     });
 };
 

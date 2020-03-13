@@ -1,5 +1,3 @@
-process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
-const router = require('express').Router();
 const fetch = require('node-fetch'); // https://www.npmjs.com/package/node-fetch
 const logger = require('logplease').create('TecoRoute');
 const crypto = require('crypto'); // SHA1
@@ -50,7 +48,7 @@ module.exports.tecoRouteLogin = function tecoRouteLogin(result, tecoRouteUsernam
         if (doOnSuccess === null)
             result.status(401).send('Error while performing TecoRoute request.');
         else
-            result.send(createTextResponse("Something went wrong."));
+            result.send(constants.GA_ERROR_RESPONSE);
     });
 };
 
@@ -66,7 +64,7 @@ module.exports.sendToTecoApiViaTecoRoute = function sendToTecoApiViaTecoRoute(re
         if (doOnSuccess === null)
             result.status(401).send('PLC is offline. Ensure that PLC is connected to network and try it again.');
         else
-            result.send(createTextResponse("Something went wrong."));
+            result.send(constants.GA_ERROR_RESPONSE);
     });
 };
 

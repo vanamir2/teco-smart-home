@@ -1,19 +1,19 @@
 process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const express = require('express');
 const router = express.Router();
-const constants = require('./constants');
+const constants = require('../src/constants');
 
 // https://github.com/haadcode/logplease
 const Logger = require('logplease');
 const logger = Logger.create('index');
 Logger.setLogLevel(Logger.LogLevels.DEBUG);
 
-const sendToTecoApiViaTecoRoute = require("./TecoRoute").sendToTecoApiViaTecoRoute;
-const tecoRouteLogin = require("./TecoRoute").tecoRouteLogin;
-const getSoftPLC = require("./TecoRoute").getSoftPLC;
-const getRoutePLC = require("./TecoRoute").getRoutePLC;
-const sendToTecoApi = require("./TecoApi").sendToTecoApi;
-const handleWebHook = require("./GoogleAssistant").handleWebHook;
+const sendToTecoApiViaTecoRoute = require("../src/TecoRoute").sendToTecoApiViaTecoRoute;
+const tecoRouteLogin = require("../src/TecoRoute").tecoRouteLogin;
+const getSoftPLC = require("../src/TecoRoute").getSoftPLC;
+const getRoutePLC = require("../src/TecoRoute").getRoutePLC;
+const sendToTecoApi = require("../src/TecoApi").sendToTecoApi;
+const handleWebHook = require("../src/GoogleAssistant").handleWebHook;
 
 const TECOROUTE_PW = constants.TECOROUTE_PW;
 const TECOROUTE_USERNAME = constants.TECOROUTE_USERNAME;
@@ -32,7 +32,7 @@ router.get('/test', (req, res) => {
 });
 router.get('/testLongUri', (req, res) => {
     let url = "http://route.tecomat.com:61682/tecoapi/GetObject?light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_TGV2w6EgTEVE&light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_U3TFmWVkIGLDrWzDoSBMRUQ&light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_xb1sdXTDoSBMRUQ";
-    sendToTecoApiViaTecoRoute(res, url, TECOROUTE_USERNAME, TECOROUTE_PW, TECOROUTE_PLC, TECOAPI_USERNAME, TECOAPI_PW);
+    sendToTecoApiViaTecoRoute(res, url, TECOROUTE_USERNAME, TECOROUTE_PW, TECOROUTE_PLC, TECOAPI_USERNAME, TECOAPI_PW, null);
 });
 router.get('/tecoRouteLoginTest', (req, res) => {
     tecoRouteLogin(res, TECOROUTE_USERNAME, TECOROUTE_PW, TECOROUTE_PLC);
@@ -69,9 +69,8 @@ router.post('/TecoApi', (req, res) => {
 });
 
 // webhook test - request is accepted
-router.post('/webhook', (req, res, next) => {
+router.post('/webhook', (req, res) => {
     handleWebHook(req, res);
 });
-
 
 module.exports = router;
