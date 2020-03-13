@@ -2,13 +2,14 @@ process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser
 const fetch = require('node-fetch');
 const logger = require('logplease').create('TecoApi');
 const md5 = require("md5");
-var constants = require('./constants');
+const constants = require('./constants');
+const createTextResponse = require("./GoogleAssistant").createTextResponse;
 
 const CNONCE_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const TECOAPI_REALM = "TecoApi";
 const TECOAPI_QOP = "auth";
 const TECOAPI_HTTP_METHOD = 'GET';
-const SDSS_TEMPERATURE = "tempTherm_O_INT_m50_100_Uk9PTTIK_VGVwbG90YSB0ZXJtb3N0YXQ";
+
 
 function hasLoginError(data, res) {
     if (data.status === 403) {

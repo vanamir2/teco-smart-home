@@ -1,6 +1,7 @@
 const constants = require('./constants');
 const logger = require('logplease').create('GoogleAssistant');
 const sendToTecoApiViaTecoRoute = require("./TecoRoute").sendToTecoApiViaTecoRoute;
+const createTextResponse = module.exports.createTextResponse;
 
 module.exports.handleWebHook = (req, res) => {
     const action = req.body.queryResult.action;
@@ -76,7 +77,7 @@ function sendPredefinedRequst(res, url, doOnSuccess) {
 
 // FULL RESPOSNE IS HERE:
 // https://cloud.google.com/dialogflow/docs/fulfillment-how#webhook_request
-function createTextResponse(textResponse) {
+module.exports.createTextResponse = function createTextResponse(textResponse) {
     return {
         "fulfillmentText": "This is a text response",
         "fulfillmentMessages": [
@@ -102,4 +103,4 @@ function createTextResponse(textResponse) {
             }
         }
     };
-}
+};

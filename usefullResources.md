@@ -12,6 +12,8 @@ Usefull info to custom NPM scripts.
 If you want to find usage of dependencies. Usage shown in the above link.
 projectFolder> depcheck
 
+### Heroku deploy pitfall <br/>
+**After deployment of changes to Heroku, clear browser cache in order to prevent ugly buggs.**
 
  
 

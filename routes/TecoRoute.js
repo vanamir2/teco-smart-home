@@ -63,7 +63,10 @@ module.exports.sendToTecoApiViaTecoRoute = function sendToTecoApiViaTecoRoute(re
         sendToTecoApi(url, tecoApiUsername, tecoApiPw, result, doOnSuccess, data["routePLC"], data["softPLC"]);
     }).catch((error) => {
         logger.debug("Received error from tecoRouteLogin: " + error);
-        result.status(500).send('PLC is offline. Ensure that PLC is connected to network and try it again.');
+        if (doOnSuccess === null)
+            result.status(401).send('PLC is offline. Ensure that PLC is connected to network and try it again.');
+        else
+            res.send(createTextResponse("Something went wrong."));
     });
 };
 
