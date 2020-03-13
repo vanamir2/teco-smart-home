@@ -1,6 +1,4 @@
-const SimpleDataSource = require('./../src/SimpleDataSource');
-
-const Base64 = require('js-base64');
+const SimpleDataSource = require('./../src/SimpleDataSource').SimpleDataSource;
 
 // load Unit.js module
 const test = require('unit.js');

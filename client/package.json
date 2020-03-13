@@ -18,28 +18,23 @@
     "react-scripts": "^3.3.0",
     "react-switch": "^5.0.1",
     "request-digest": "^1.0.13",
-    "unit.js": "^2.1.1"
+    "unit.js": "^2.1.1",
+    "esm": "^3.2.25"
   },
   "proxy": "http://localhost:5000/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "mocha --require js-base64",
+    "test": "mocha -r esm",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+    "extends": [
+      "eslint:recommended",
+      "react-app"
     ]
-  }
+  },
+  "browserslist": [
+    "defaults"
+  ]
 }

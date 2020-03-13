@@ -9,7 +9,7 @@ var constants = require('./constants');
 const TECOROUTE_LOGIN_TEMPLATE = "USER={0}&PASS={1}&PLC={2}";
 const TECOROUTE_URL = "http://route.tecomat.com:61682/TR_LOGIN.XML";
 
-function isStatusOk(res,reject,result){
+function isStatusOk(res, reject, result) {
     if (res.status === 500) {
         if (reject !== undefined)
             reject("Rejected. PLC is offline. Ensure that PLC is connected to network and try it again.");
@@ -37,7 +37,7 @@ module.exports.tecoRouteLogin = function tecoRouteLogin(result, tecoRouteUsernam
         // 2nd request - send cookies (RoutePLC,RouteLinkSave) and formData(username,password,PLC name)
         fetch(TECOROUTE_URL, getTecoRoute2ndRequest(routePLC, tecoRouteLogin)).then(res => {
             logger.debug("TecoRoute login - processing 2st request. Its status is: " + res.status);
-            if(!isStatusOk(res,reject,result))
+            if (!isStatusOk(res, reject, result))
                 return;
             let softPLC = module.exports.getSoftPLC(getCookieString(res.headers));
             if (resolve !== undefined)

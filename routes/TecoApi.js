@@ -10,7 +10,7 @@ const TECOAPI_QOP = "auth";
 const TECOAPI_HTTP_METHOD = 'GET';
 const SDSS_TEMPERATURE = "tempTherm_O_INT_m50_100_Uk9PTTIK_VGVwbG90YSB0ZXJtb3N0YXQ";
 
-function hasLoginError(data,res) {
+function hasLoginError(data, res) {
     if (data.status === 403) {
         res.status(403).send('TecoRoute login expired. Please perform new login.');
         return true;
@@ -33,8 +33,8 @@ function hasLoginError(data,res) {
 module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, password, res, doOnSuccess, routePLC, softPLC) {
     logger.debug('---- Sending 1st request to TecoApi');
     fetch(targetUrl, {headers: {Cookie: constants.COOKIE_STRING.format(routePLC, softPLC)},}).then(data => {
-        if (hasLoginError(data,res)) return;
-        logger.debug('Data received from 1st TecoApi request. Its status is: ' + data.status );
+        if (hasLoginError(data, res)) return;
+        logger.debug('Data received from 1st TecoApi request. Its status is: ' + data.status);
         logger.debug(data);
         const authorizationTemplate = getAuthorizationTemplate(data.headers, targetUrl, username, password);
         logger.debug('---- Sending 2nd request to TecoApi');
@@ -48,13 +48,13 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
             .then(data => {
                 logger.debug('Data received from 2st TecoApi request.');
                 logger.debug(data);
-                if(data.error !== undefined){
+                if (data.error !== undefined) {
                     res.status(500).send("Error while performing TecoApi request.\n\nError=" + JSON.stringify(data.error));
                 }
                 if (doOnSuccess === null || doOnSuccess === undefined)
                     res.send(data);
                 else
-                    doOnSuccess(Object.values(data)[0] );
+                    doOnSuccess(Object.values(data)[0]);
             })
     }).catch(e => {
         logger.debug(e);

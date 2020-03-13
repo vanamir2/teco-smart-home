@@ -21,7 +21,7 @@ module.exports.handleWebHook = (req, res) => {
             doOnSuccess = (state) => res.send(createTextResponse("The electric socket is " + (state === true ? "on." : "off.")));
             break;
         case 'isDoorOpen':
-            url = url + constants.COMMAND_GET_OBJECT + constants.SDSS_MAGNETIC_SWITCH ;
+            url = url + constants.COMMAND_GET_OBJECT + constants.SDSS_MAGNETIC_SWITCH;
             doOnSuccess = (state) => res.send(createTextResponse("The door is " + (state !== true ? "open." : "closed.")));
             break;
         //--------------------------------------- SET VALUE
