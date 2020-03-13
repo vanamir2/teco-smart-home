@@ -66,7 +66,7 @@ module.exports.sendToTecoApiViaTecoRoute = function sendToTecoApiViaTecoRoute(re
         if (doOnSuccess === null)
             result.status(401).send('PLC is offline. Ensure that PLC is connected to network and try it again.');
         else
-            res.send(createTextResponse("Something went wrong."));
+            result.send(createTextResponse("Something went wrong."));
     });
 };
 
