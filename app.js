@@ -19,6 +19,8 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
 } else {
+    // load env file
+    require("dotenv").config();
     // catch 404 and forward to error handler
     app.use((req, res, next) => {
         next(createError(404));

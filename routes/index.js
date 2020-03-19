@@ -14,6 +14,7 @@ const getSoftPLC = require("../src/TecoRoute").getSoftPLC;
 const getRoutePLC = require("../src/TecoRoute").getRoutePLC;
 const sendToTecoApi = require("../src/TecoApi").sendToTecoApi;
 const handleWebHook = require("../src/GoogleAssistant").handleWebHook;
+const test = require("../src/AzureStorage").test;
 
 const TECOROUTE_PW = constants.TECOROUTE_PW;
 const TECOROUTE_USERNAME = constants.TECOROUTE_USERNAME;
@@ -72,5 +73,11 @@ router.post('/TecoApi', (req, res) => {
 router.post('/webhook', (req, res) => {
     handleWebHook(req, res);
 });
+
+// download data from Azure
+router.get('/data', (req, res) => {
+    test(req, res);
+});
+
 
 module.exports = router;

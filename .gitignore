@@ -1,5 +1,6 @@
 # Default ignored files
 .idea
+.env
 /node_modules/
 /package-lock.json
 

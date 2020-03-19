@@ -23,7 +23,9 @@
     "logplease": "^1.2.15",
     "node-fetch": "^2.6.0",
     "http-parser-js": "^0.5.2",
-    "md5": "^2.2.1"
+    "md5": "^2.2.1",
+    "azure-storage": "^2.10.3",
+    "dotenv": "^8.2.0"
   },
   "eslintConfig": {
     "//": "Validation. See https://eslint.org/",

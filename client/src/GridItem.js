@@ -172,9 +172,7 @@ export class RedLight extends Light {
             </div>
         );
     }
-
 }
-
 
 export class ReadOnly extends React.Component {
     constructor(props) {
