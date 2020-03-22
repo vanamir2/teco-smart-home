@@ -40,6 +40,12 @@
     padding: 20px 0 20px 0;
 }
 
+.login-form-withoutNewLineAndWidth {
+    font-family: 'Quicksand', sans-serif;
+    display: inline-block;
+    text-align: right;
+}
+
 .login-form-withoutNewLine {
     font-family: 'Quicksand', sans-serif;
     width: 300px;
@@ -49,7 +55,6 @@
 
 .login-form-withoutNewLineTop {
     font-family: 'Quicksand', sans-serif;
-    width: 90px;
     display: inline-block;
     vertical-align: top;
 }

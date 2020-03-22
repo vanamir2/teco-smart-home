@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as Login from './loginForm.js';
+import * as ComponentUtils from './ComponentUtils';
+import {DiagramPage} from './DiagramPage.js';
 import axios from "axios";
 import * as GridItem from "./GridItem.js";
 import * as DataSourceUtils from "./DataSourceUtils.js";
@@ -38,10 +40,12 @@ class Main extends React.Component {
             roomToSDSmap: null,
             isLocalhostSwitchOn: false,
             performRefresh: false,
+            showDiagramPage: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleLocalhostChange = this.handleLocalhostChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.negateDiagramState = this.negateDiagramState.bind(this);
     }
 
     selectRoom(room) {
@@ -51,6 +55,11 @@ class Main extends React.Component {
 
     unselectRoom() {
         this.setState({selectedRoom: null});
+    }
+
+    negateDiagramState(event) {
+        event.preventDefault();
+        this.setState({showDiagramPage: !this.state.showDiagramPage});
     }
 
     performRefresh() {
@@ -151,7 +160,8 @@ class Main extends React.Component {
     createLoginForm() {
         let loginForm;
         let localHostSwitch = !IS_PRODUCTION_ENVIRONMENT ?
-            <Login.LocalhostSwitch checked={this.state.isLocalhostSwitchOn} handleChange={this.handleLocalhostChange}/>
+            <ComponentUtils.MaterialSwitch name={"Localhost"} checked={this.state.isLocalhostSwitchOn}
+                                           handleChange={this.handleLocalhostChange}/>
             : "";
         if (this.state.isLocalhostSwitchOn)
             loginForm = Login.createLocalhostLoginForm(this.handleChange, this.handleSubmit, this.state.ipAddress, this.state.username, this.state.password);
@@ -170,7 +180,7 @@ class Main extends React.Component {
     createRoomGrid() {
         let gridElements = [];
         if (this.state.roomToSDSmap === undefined)
-            return <div className="loader"></div>;
+            return <div className="loader"/>;
         for (const [key] of this.state.roomToSDSmap.entries())
             gridElements.push(<GridItem.Room className="grid-item"
                                              key={key} name={key}
@@ -184,6 +194,10 @@ class Main extends React.Component {
                     <form onSubmit={this.handleSubmit}>
                         <input type="submit" value="Refresh"/>
                     </form>
+                    <br/>
+                    <form onSubmit={this.negateDiagramState}>
+                        <input type="submit" value="Diagrams"/>
+                    </form>
                     <GridItem.ActionButton
                         // force page refresh
                         onClick={() => window.location.reload(false)}
@@ -193,10 +207,25 @@ class Main extends React.Component {
         );
     }
 
+    createDiagramPage() {
+        return (
+            <div>
+                <a href={"/#"} className="active_chat" onClick={this.negateDiagramState}>
+                    <div className="leftColumn">
+                        <img className="center" height="30" width="30" src="return-button.svg" alt="Logo"/>
+                    </div>
+                </a>
+                <DiagramPage/>
+            </div>);
+    }
+
     render() {
         // the 1st tag is to make it click-able
         if (!this.state.isConnected)
             return this.createLoginForm();
+        // diagram page
+        else if (this.state.showDiagramPage)
+            return this.createDiagramPage();
         // room selection
         else if (this.state.selectedRoom === null)
             return this.createRoomGrid();
@@ -312,3 +341,4 @@ function executeAtInterval(fn, timeout, interval) {
         }
     })();
 }
+

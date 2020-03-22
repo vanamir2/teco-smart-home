@@ -15,6 +15,7 @@ const getRoutePLC = require("../src/TecoRoute").getRoutePLC;
 const sendToTecoApi = require("../src/TecoApi").sendToTecoApi;
 const handleWebHook = require("../src/GoogleAssistant").handleWebHook;
 const test = require("../src/AzureStorage").test;
+const getData = require("../src/AzureStorage").getData;
 
 const TECOROUTE_PW = constants.TECOROUTE_PW;
 const TECOROUTE_USERNAME = constants.TECOROUTE_USERNAME;
@@ -76,7 +77,24 @@ router.post('/webhook', (req, res) => {
 
 // download data from Azure
 router.get('/data', (req, res) => {
-    test(req, res);
+    let hours = 1;
+    let jumpByNFields = 1;
+    // test(req, res);
+    getData(req, res, hours, jumpByNFields);
+});
+
+// download data from Azure
+router.post('/data', (req, res) => {
+    let hours = req.body.hours;
+    let jumpByNFields = req.body.jumpByNFields;
+    let dayToLoad = req.body.day;
+
+    logger.debug('Hours=' + hours );
+    logger.debug('jumpByNFields=' + jumpByNFields);
+    logger.debug('day=' + dayToLoad);
+
+    // test(req, res);
+    getData(req, res, hours, jumpByNFields, dayToLoad);
 });
 
 
