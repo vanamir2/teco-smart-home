@@ -8,11 +8,13 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
+if (process.env.NODE_ENV !== 'production') {
 // incoming request logging
-app.use((req, res, next) => {
-    logger.info(`${req.method} ${req.originalUrl}`);
-    next()
-});
+    app.use((req, res, next) => {
+        logger.info(`${req.method} ${req.originalUrl}`);
+        next()
+    });
+}
 
 // ---------------------- ENDPOINTS
 app.use('/', require('../routes'));
