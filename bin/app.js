@@ -6,7 +6,7 @@ const logger = require('logplease').create('backend-app');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // incoming request logging
 app.use((req, res, next) => {
@@ -15,15 +15,15 @@ app.use((req, res, next) => {
 });
 
 // ---------------------- ENDPOINTS
-app.use('/', require('./routes'));
+app.use('/', require('../routes'));
 
 // IMPORTANT - enables client routing
 if (process.env.NODE_ENV === 'production') {
     // Serve any static files
-    app.use(express.static(path.join(__dirname, 'client/build')));
+    app.use(express.static(path.join(__dirname, '../client/build')));
     // Handle React routing, return all requests to React app
     app.get('*', function (req, res) {
-        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
     });
 } else {
     // load env file
