@@ -1,7 +1,7 @@
 const fetch = require('node-fetch'); // https://www.npmjs.com/package/node-fetch
 const logger = require('logplease').create('TecoRoute');
 const crypto = require('crypto'); // SHA1
-const sendToTecoApi = require("./TecoApi").sendToTecoApi;
+const sendToTecoApi = require("./tecoApi").sendToTecoApi;
 var constants = require('./constants');
 
 const TECOROUTE_LOGIN_TEMPLATE = "USER={0}&PASS={1}&PLC={2}";
@@ -27,7 +27,7 @@ function isStatusOk(res, reject, result) {
 
 /** Returns cookie necessary to log via tecoRoute. */
 module.exports.tecoRouteLogin = function tecoRouteLogin(result, tecoRouteUsername, tecoRoutePw, tecoRoutePlc, resolve, reject) {
-    logger.debug("--------------- TecoRoute login - sending 1st request ---------------------");
+    logger.debug("--------------- TecoRoute LOGIN - sending 1st request ---------------------");
     fetch(TECOROUTE_URL, {redirect: 'manual'}).then(res => {
         logger.debug("TecoRoute login - processing 1st request. Its status is: " + res.status);
         let routePLC = module.exports.getRoutePLC(getCookieString(res.headers));
@@ -60,9 +60,9 @@ module.exports.sendToTecoApiViaTecoRoute = function sendToTecoApiViaTecoRoute(re
         logger.debug("Received data from tecoRouteLogin =" + data);
         sendToTecoApi(url, tecoApiUsername, tecoApiPw, result, doOnSuccess, data["routePLC"], data["softPLC"]);
     }).catch((error) => {
-        logger.debug("Received error from tecoRouteLogin: " + error);
-        if (doOnSuccess === null)
-            result.status(401).send('PLC is offline. Ensure that PLC is connected to network and try it again.');
+        logger.error("Received ERROR from tecoRouteLogin: " + error);
+        if (doOnSuccess === null || doOnSuccess === undefined)
+            result.status(401).send("Received ERROR from tecoRouteLogin: " + error);
         else
             result.send(constants.GA_ERROR_RESPONSE);
     });

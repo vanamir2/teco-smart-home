@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 // https://stackoverflow.com/questions/8595509/how-do-you-share-constants-in-nodejs-modules
 module.exports = Object.freeze({
     //SDSS
@@ -12,10 +14,11 @@ module.exports = Object.freeze({
     TECOROUTE_URL: "http://route.tecomat.com:61682/tecoapi/",
     // COMMANDS
     COMMAND_GET_OBJECT: "GetObject?",
+    COMMAND_GET_LIST: "GetList",
     COMMAND_SET_OBJECT: "SetObject?",
     // LOGIN
     TECOROUTE_PW: process.env.TECOROUTE_PW,
-    TECOROUTE_USERNAME: process.env.TECOAPI_USERNAME,
+    TECOROUTE_USERNAME: process.env.TECOROUTE_USERNAME,
     TECOROUTE_PLC: process.env.TECOROUTE_PLC,
     TECOAPI_USERNAME: process.env.TECOAPI_USERNAME,
     TECOAPI_PW: process.env.TECOAPI_PW,

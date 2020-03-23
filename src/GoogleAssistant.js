@@ -1,6 +1,6 @@
 const constants = require('./constants');
 const logger = require('logplease').create('GoogleAssistant');
-const sendToTecoApiViaTecoRoute = require("./TecoRoute").sendToTecoApiViaTecoRoute;
+const sendToTecoApiViaTecoRoute = require("./tecoRoute").sendToTecoApiViaTecoRoute;
 
 module.exports.handleWebHook = (req, res) => {
     const action = req.body.queryResult.action;

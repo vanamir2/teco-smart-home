@@ -1,19 +1,26 @@
-## TecoApi backend - resources
+## tecoapi backend - resources
 
-#### [Ngrok](https://ngrok.com/)
-Allows you to publish (make a tunnel) to make your localhost service (server) available from internet. Powerfull and simple.
-##### [Tutorial](https://www.youtube.com/watch?v=7jTajujOTIA)
-Commad: ngrok http {port}
+#### [ngrok](https://ngrok.com/)
+allows you to publish (make a tunnel) to make your localhost service (server) available from internet. powerfull and simple.
+##### [tutorial](https://www.youtube.com/watch?v=7jtajujotia)
+commad: ngrok http {port}
 
-#### [NPM custom scripts](https://www.freecodecamp.org/news/introduction-to-npm-scripts-1dbb2ae01633/)
-Usefull info to custom NPM scripts.
+#### [npm custom scripts](https://www.freecodecamp.org/news/introduction-to-npm-scripts-1dbb2ae01633/)
+usefull info to custom npm scripts.
 
-#### [Dependency check](https://www.npmjs.com/package/depcheck)
-If you want to find usage of dependencies. Usage shown in the above link.
-projectFolder> depcheck
+#### [dependency check](https://www.npmjs.com/package/depcheck)
+if you want to find usage of dependencies. usage shown in the above link.
+projectfolder> depcheck
 
-### Heroku deploy pitfall <br/>
-**After deployment of changes to Heroku, clear browser cache in order to prevent ugly buggs.**
+#### [heroku environment variables](https://devcenter.heroku.com/articles/config-vars)
+add / remove env variable.
+
+##### [Logger](https://github.com/haadcode/logplease) used in this project.
+
+
+
+### heroku deploy pitfall <br/>
+**after deployment of changes to heroku, clear browser cache in order to prevent ugly buggs.**
 
  
 

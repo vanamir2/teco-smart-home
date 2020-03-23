@@ -46,7 +46,7 @@ export class Room extends React.Component {
     }
 }
 
-// TODO - refactor to TecoApi.js
+// TODO - refactor to tecoApi.js
 function getValueFromTecoApi(postRequestData, itemId, processData) {
     const axiosWithTimeout = axios.create({timeout: REQUEST_TIMEOUT,});
 
@@ -74,7 +74,7 @@ function getValueFromTecoApi(postRequestData, itemId, processData) {
     });
 }
 
-// TODO - refactor to TecoApi.js
+// TODO - refactor to tecoApi.js
 function setValueToTecoApi(postRequestData, itemId, valueToSet, onSucces) {
     const axiosWithTimeout = axios.create({timeout: REQUEST_TIMEOUT});
 
