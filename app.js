@@ -2,13 +2,20 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const app = express();
+const logger = require('logplease').create('backend-app');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// incoming request logging
+app.use((req, res, next) => {
+    logger.info(`${req.method} ${req.originalUrl}`);
+    next()
+});
+
 // ---------------------- ENDPOINTS
-app.use('/', require('./routes/index'));
+app.use('/', require('./routes'));
 
 // IMPORTANT - enables client routing
 if (process.env.NODE_ENV === 'production') {
