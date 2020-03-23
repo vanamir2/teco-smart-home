@@ -14,11 +14,11 @@ module.exports = Object.freeze({
     COMMAND_GET_OBJECT: "GetObject?",
     COMMAND_SET_OBJECT: "SetObject?",
     // LOGIN
-    TECOROUTE_PW: "12345678",
-    TECOROUTE_USERNAME: "miroslav.vana",
-    TECOROUTE_PLC: "kufr01",
-    TECOAPI_USERNAME: "admin",
-    TECOAPI_PW: "admin",
+    TECOROUTE_PW: process.env.TECOROUTE_PW,
+    TECOROUTE_USERNAME: process.env.TECOAPI_USERNAME,
+    TECOROUTE_PLC: process.env.TECOROUTE_PLC,
+    TECOAPI_USERNAME: process.env.TECOAPI_USERNAME,
+    TECOAPI_PW: process.env.TECOAPI_PW,
 
     // Google assistant error response
     GA_ERROR_RESPONSE :  {
