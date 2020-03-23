@@ -29,7 +29,7 @@ router.post('/tecoRouteLogin', (req, res) => {
 router.post('/TecoApiViaTecoRouteWithCookie', (req, res) => {
     const url = constants.TECOROUTE_URL + req.body.command;
     logger.debug('Request body is= ' + JSON.stringify(req.body));
-    TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, getRoutePLC(req.body.cookie), getSoftPLC(req.body.cookie));
+    TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, TecoRoute.getRoutePLC(req.body.cookie), TecoRoute.getSoftPLC(req.body.cookie));
 });
 
 // TecoRoute NOT logged yet, sends request to TecoApi
