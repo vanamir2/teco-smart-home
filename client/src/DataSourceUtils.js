@@ -1,4 +1,3 @@
-
 const SimpleDataSource = require('./SimpleDataSource').SimpleDataSource;
 
 // DSS = Data Source String
@@ -13,9 +12,8 @@ export function createRoomToSDSmap(sDSList) {
         let simpleDataSource = "";
         try {
             simpleDataSource = new SimpleDataSource(key);
-        }
-        catch(error) {
-            throw new Error(error);
+        } catch (error) {
+            // be quiet on error - otherwise app will crash with any PUBLIC_API variable that does not correspond to our SDS schema.
         }
         const room = simpleDataSource.room;
         // adds SimpleDataSource to Array obtained by room

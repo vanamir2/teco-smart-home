@@ -215,3 +215,25 @@
 .margin {
     padding: 2px;
 }
+
+.green {
+    color: #00ff16;
+}
+
+.red {
+    color: #ff2527;
+}
+
+.connectionStatusFooter {
+    font-family: 'Quicksand', sans-serif;
+    text-align: center;
+    height:20px;
+    width: 100%;
+    background-image: none;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    background-position: 0% 0%;
+    position: fixed;
+    bottom: 0pt;
+    left: 0pt;
+}

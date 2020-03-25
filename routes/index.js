@@ -57,6 +57,12 @@ router.post('/data', (req, res) => {
     AzureStorage.getData(req, res, hours, jumpByNFields, dayToLoad);
 });
 
+// get status of connection
+router.post('/statusOfConnection', (req, res) => {
+    const url = constants.TECOROUTE_URL + constants.COMMAND_GET_OBJECT + constants.TECOAPI_STATUS;
+    TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, TecoRoute.getRoutePLC(req.body.cookie), TecoRoute.getSoftPLC(req.body.cookie));
+});
+
 // ------------------------------------------------------------------------------- DEVELOPER ENDPOINTS
 if (process.env.NODE_ENV !== 'production') {
     // http://192.168.134.176/TecoApi/GetList

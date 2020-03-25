@@ -7,6 +7,7 @@ import {DiagramPage} from './DiagramPage.js';
 import axios from "axios";
 import * as GridItem from "./GridItem.js";
 import * as DataSourceUtils from "./DataSourceUtils.js";
+import {ConnectionStatusCheck} from './connectionStatus';
 
 const Logger = require('logplease');
 const logger = Logger.create('index');
@@ -93,6 +94,12 @@ class Main extends React.Component {
                 alert('Request failed. Error: ' + JSON.stringify(response.data.error));
                 return;
             }
+            // remove public data that are not SDSS (they have to start with 'NOPE_'
+            for (let key in response.data){
+                if( key.startsWith('NOPE_'))
+                    delete response.data[key];
+            }
+
             console.log(response.data);
             let map;
             try {
@@ -146,15 +153,14 @@ class Main extends React.Component {
     }
 
     handleLocalhostChange() {
-        logger.info("Localhost switch was changed to: " + !this.state.isLocalhostSwitchOn);
+        logger.debug("Localhost switch was changed to: " + !this.state.isLocalhostSwitchOn);
         this.setState({isLocalhostSwitchOn: !this.state.isLocalhostSwitchOn});
     }
 
     handleSubmit(event) {
+        logger.debug('HandleSubmit event started...');
         event.preventDefault();
-        //this.sendFirstRequestToTecoApi(GET_LIST_OF_OBJECTS);
-        // keep connection active - perform TecoRoute in defined interval
-        executeAtInterval(() => this.sendFirstRequestToTecoApi(GET_LIST_OF_OBJECTS), 10 * MS_TO_S, 120 * MS_TO_S);
+        this.sendFirstRequestToTecoApi(GET_LIST_OF_OBJECTS);
     }
 
     createLoginForm() {
@@ -203,6 +209,9 @@ class Main extends React.Component {
                         onClick={() => window.location.reload(false)}
                         text={'Logout'}/>
                 </div>
+                <ConnectionStatusCheck
+                    postRequestData={this.state.postRequestData}
+                />
             </div>
         );
     }
@@ -216,6 +225,9 @@ class Main extends React.Component {
                     </div>
                 </a>
                 <DiagramPage/>
+                <ConnectionStatusCheck
+                    postRequestData={this.state.postRequestData}
+                />
             </div>);
     }
 
@@ -317,7 +329,9 @@ class Main extends React.Component {
                             {roomElements}
                         </div>
                     </div>
-
+                    <ConnectionStatusCheck
+                        postRequestData={this.state.postRequestData}
+                    />
                 </div>
             );
         }
@@ -328,17 +342,3 @@ ReactDOM.render(
     <Main/>,
     document.getElementById('root')
 );
-
-function executeAtInterval(fn, timeout, interval) {
-    let startTime = Date.now();
-    let intervalUsed = interval || 1000;
-    let canPoll = true;
-
-    (function p() {
-        canPoll = (Date.now() - startTime) <= timeout;
-        if (!fn() && canPoll) { // ensures the function exucutes
-            setTimeout(p, intervalUsed);
-        }
-    })();
-}
-
