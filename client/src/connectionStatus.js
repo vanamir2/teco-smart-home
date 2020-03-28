@@ -3,7 +3,7 @@ import axios from "axios";
 
 const logger = require('logplease').create('ConnectionStatus');
 
-const STATUS_ENDPOINT_TECO = 'NOPE_status';
+const STATUS_ENDPOINT_TECO = 'status';
 const INTERVAL_BETWEEN_STATUS_REFRESH = 5000;
 const TIMEOUT = 4500;
 const STATUS_ENDPOINT_BACKEND = '/statusOfConnection';
@@ -27,7 +27,7 @@ export class ConnectionStatusCheck extends React.Component {
         // http://route.tecomat.com:61682/PAGE1.XML
         axiosWithTimeout.post(STATUS_ENDPOINT_BACKEND, this.props.postRequestData).then((response) => {
             logger.info(response.data);
-            if (response.data[STATUS_ENDPOINT_TECO] === true)
+            if (response.data[Object.keys(response.data)] === true)
                 state = true;
         }).catch((error) => logger.error(error)) // log error if catched
             .finally(() => this.setState({isConnectionOK: state})); // set state

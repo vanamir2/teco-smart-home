@@ -46,7 +46,7 @@ module.exports.getData = (req, res, hours, jumpByNFields, dayToLoad) => {
 function createRow(entry) {
     return {
         "plcSaveTs": entry.plcSaveTs._,
-        "doorClosed": entry.doorClosed._,
+        "doorOpened": entry.doorClosed === undefined ? entry.doorOpened._ : !(entry.doorClosed._),
         "electricSocket": entry.electricSocket._,
         "temperature_outer": entry.temperature_outer._,
         "temperature_inner": entry.temperature_inner._,

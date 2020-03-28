@@ -91,8 +91,8 @@ export class DiagramPage extends React.Component {
                 </form>
                 <TemperatureDiagram graphData={this.state.graphData} name={"Temperature"}/>
                 <HumidityDiagram graphData={this.state.graphData} name={"Humidity"}/>
-                <BooleanDiagram graphData={this.state.graphData} name={"True/False values"}/>
-                <LightDiagram graphData={this.state.graphData} name={"Light brightness"}/>
+                <BooleanDiagram graphData={this.state.graphData} name={"True/False values"} maxValue={1}/>
+                <LightDiagram graphData={this.state.graphData} name={"Light brightness"} maxValue={100}/>
             </div>
         );
     }
@@ -103,7 +103,7 @@ export class TemperatureDiagram extends React.Component {
         let yAxisName = "Temperature °C";
         let yAxisAllFields = ["temperature_inner", "temperature_outer"];
         let yAxisAllNames = ["Embedded sensor", "2nd sensor"];
-        return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames);
+        return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames, this.props.maxValue);
     }
 }
 
@@ -112,16 +112,16 @@ export class HumidityDiagram extends React.Component {
         let yAxisName = "Humidity [%]";
         let yAxisAllFields = ["humidity_inner"];
         let yAxisAllNames = ["Humidity inner sensor"];
-        return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames);
+        return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames, this.props.maxValue);
     }
 }
 
 export class BooleanDiagram extends React.Component {
     render() {
         let yAxisName = "True/False";
-        let yAxisAllFields = ["doorClosed",  "electricSocket" ];
-        let yAxisAllNames = ["Door closed", "Socket on"];
-        return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames);
+        let yAxisAllFields = ["doorOpened",  "electricSocket" ];
+        let yAxisAllNames = ["Door opened", "Socket on"];
+        return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames, this.props.maxValue);
     }
 }
 
@@ -130,7 +130,7 @@ export class LightDiagram extends React.Component {
         let yAxisName = "Light diagram";
         let yAxisAllFields = ["light"];
         let yAxisAllNames = ["Light brightness"];
-        return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames);
+        return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames, this.props.maxValue);
     }
 }
 
@@ -153,7 +153,7 @@ function getValue(value){
     return value;
 }
 
-function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAllNames) {
+function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAllNames, maximum) {
     let dataArr = [];
     let minimum = MAX_INT;
 
@@ -187,6 +187,7 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
             },
             // https://canvasjs.com/docs/charts/chart-options/axisx/minimum/
             minimum: minimum - 0.1,
+            maximum: maximum === undefined ? null : maximum
         },
         toolTip: {
             shared: true

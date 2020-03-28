@@ -1,3 +1,4 @@
+process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const fetch = require('node-fetch');
 const logger = require('logplease').create('TecoApi');
 const md5 = require("md5");
@@ -55,7 +56,7 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
                     doOnSuccess(Object.values(data)[0]);
             })
     }).catch(e => {
-        logger.debug(e);
+        logger.error(e);
         if (doOnSuccess === null)
             res.status(401).send('Error while performing TecoApi request. Try to refresh page and perform new login.');
         else

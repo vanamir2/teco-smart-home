@@ -1,3 +1,4 @@
+process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const fetch = require('node-fetch'); // https://www.npmjs.com/package/node-fetch
 const logger = require('logplease').create('TecoRoute');
 const crypto = require('crypto'); // SHA1

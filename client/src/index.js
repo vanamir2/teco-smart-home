@@ -18,7 +18,7 @@ Logger.setLogLevel(Logger.LogLevels.DEBUG);
 
 const GET_LIST_OF_OBJECTS = "GetList";
 const GET_OBJECT = "GetObject?";
-const THERMOSTAT_TEMP = 'tempTherm';
+const THERMOSTAT_TEMP = 'thermTemp';
 const IS_PRODUCTION_ENVIRONMENT = process.env.NODE_ENV === 'production';
 
 //http://192.168.134.176/TecoApi/GetList

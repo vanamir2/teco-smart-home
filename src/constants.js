@@ -9,7 +9,7 @@ module.exports = Object.freeze({
     SDSS_THERM_STATE: 'thermState_O_BOO_0_1_Uk9PTTIK_VGVybW9zdGF0IE9OL09GRg',
     SDSS_ELECTRIC_SOCKET: 'socket_O_BOO_0_1_T2LDvXZhY8OtIHBva29q_WsOhc3V2a2E',
     SDSS_MAGNETIC_SWITCH: 'mgnSwitch_I_BOO_0_1_T2LDvXZhY8OtIHBva29q_RHZlxZllIHphdsWZZW55',
-    TECOAPI_STATUS: 'NOPE_status',
+    TECOAPI_STATUS: 'status',
     // UTILS
     COOKIE_STRING: "RoutePLC={0};RouteLinkSave=;SoftPLC={1}",
     TECOROUTE_URL: "http://route.tecomat.com:61682/tecoapi/",
