@@ -2,12 +2,13 @@
 
 import React from 'react';
 import axios from "axios";
-import {TECO_ROUTE_WITH_COOKIE_ENDPOINT} from "./GridItem";
+import {TECO_ROUTE_WITH_COOKIE_ENDPOINT, ROOM_PREFIX} from "./GridItem";
 import {createSDSStoValueMap} from "./DataSourceUtils";
 
 const logger = require('logplease').create('dataRefresher');
 export const INTERVAL_BETWEEN_STATUS_REFRESH = 3000;
 const TIMEOUT = 5000;
+
 
 export class DataRefresher extends React.Component {
     state = {
@@ -24,13 +25,14 @@ export class DataRefresher extends React.Component {
     refreshData() {
         logger.debug('Connection status check is refreshing.');
         let requestData = JSON.parse(JSON.stringify(this.props.postRequestData));
-        requestData['command'] = 'GetObject?' + this.props.selectedRoomEncoded;
+        let roomWithPrefix = ROOM_PREFIX + this.props.selectedRoomEncoded;
+        requestData['command'] = 'GetObject?' + roomWithPrefix;
         logger.debug(requestData);
 
         const axiosWithTimeout = axios.create({timeout: TIMEOUT,});
         // http://route.tecomat.com:61682/PAGE1.XML
         axiosWithTimeout.post(TECO_ROUTE_WITH_COOKIE_ENDPOINT, requestData).then((response) => {
-            let roomData = response.data[this.props.selectedRoomEncoded];
+            let roomData = response.data[roomWithPrefix];
             logger.info(roomData);
             // create and insert map
             let SDSSmap = createSDSStoValueMap(roomData);

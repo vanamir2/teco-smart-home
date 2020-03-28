@@ -1,17 +1,18 @@
 const SimpleDataSource = require('./SimpleDataSource').SimpleDataSource;
+const logger = require('logplease').create('dataSourceUtils');
 
 // DSS = Data Source String
 /**
  * Creates room to SimpleDataSource map.
- * @param sDSList {Array.<String>} Where String is SimpleDataSourceString is string received from Forxtrot PLC. e.g. "LightK_O_REA_0_100_S3VjaHnFiA_U3bEm3Rsbw".
+ * @param SDSSList {Array.<String>} Where String is SimpleDataSourceString is string received from Forxtrot PLC. e.g. "LightK_O_REA_0_100_S3VjaHnFiA_U3bEm3Rsbw".
  * */
-export function createRoomToSDSmap(sDSList) {
+export function createRoomToSDSmap(SDSSList) {
     let map = new Map();
-    for (let key in sDSList) {
-        //console.log(key);
+    SDSSList.forEach((sdss) => {
+        logger.debug(sdss);
         let simpleDataSource = "";
         try {
-            simpleDataSource = new SimpleDataSource(key);
+            simpleDataSource = new SimpleDataSource(sdss);
         } catch (error) {
             // be quiet on error - otherwise app will crash with any PUBLIC_API variable that does not correspond to our SDS schema.
         }
@@ -19,10 +20,9 @@ export function createRoomToSDSmap(sDSList) {
         // adds SimpleDataSource to Array obtained by room
         if (map.has(room))
             map.get(room).push(simpleDataSource);
-        // else creates new room
-        else
+        else // else creates new room
             map.set(room, [simpleDataSource]);
-    }
+    });
     return map;
 }
 
@@ -37,4 +37,3 @@ export function createSDSStoValueMap(SDSSList) {
 export const BOOLEAN_DATA_TYPE = "BOO";
 
 export const RED_LIGHT = "lightRed";
-//module.exports.BOOLEAN_DATA_TYPE = BOOLEAN_DATA_TYPE;

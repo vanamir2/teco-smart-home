@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from "axios";
+import {SimpleDataSource} from "./SimpleDataSource";
 
 export const TECO_ROUTE_LOGIN_ENDPOINT = '/tecoRouteLogin';
 export const TECO_API_ENDPOINT = '/TecoApi';
 export const TECO_ROUTE_WITH_COOKIE_ENDPOINT = '/TecoApiViaTecoRouteWithCookie';
 export const REQUEST_TIMEOUT = 7000;
 import {INTERVAL_BETWEEN_STATUS_REFRESH} from './dataRefresher'
+export const ROOM_PREFIX = 'ROOM_';
 
 const logger = require('logplease').create('GridItem');
 
@@ -47,32 +49,9 @@ export class Room extends React.Component {
     }
 }
 
-// TODO - refactor to tecoApi.js
-function getValueFromTecoApi(postRequestData, itemId, processData) {
-    const axiosWithTimeout = axios.create({timeout: REQUEST_TIMEOUT,});
-
-    // deep copy of postRequestData
-    let data = JSON.parse(JSON.stringify(postRequestData));
-    data['command'] = 'GetObject?' + itemId;
-    logger.debug(data);
-    let endPoint = data['plcName'] !== undefined ? TECO_ROUTE_WITH_COOKIE_ENDPOINT : TECO_API_ENDPOINT;
-
-    axiosWithTimeout.post(endPoint, data).then((response) => {
-        if (response.data.error !== undefined) {
-            alert('Request to read data failed. Error: ' + JSON.stringify(response.data.error));
-            return;
-        }
-        console.log(response.data);
-        let value = response.data[itemId];
-        console.log(value);
-        processData(value);
-    }).catch((error) => {
-        if (error.response) {
-            alert(error.response.data);
-            console.log(error.response.data);
-        } else
-            alert('No answer from PLC: ' + data);
-    });
+// http://route.tecomat.com:61682/TecoApi/GetObject?ROOM_T2LDvXZhY8OtIHBva29q.light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_TGV2w6EgTEVE
+function getRoomPrefixSelectorFromSDSS(sdss){
+    return ROOM_PREFIX + new SimpleDataSource(sdss).roomBase64 + '.'
 }
 
 // TODO - refactor to tecoApi.js
@@ -81,7 +60,7 @@ function setValueToTecoApi(postRequestData, itemId, valueToSet, onSucces) {
 
     // deep copy of postRequestData
     let data = JSON.parse(JSON.stringify(postRequestData));
-    data['command'] = 'SetObject?' + itemId + '=' + valueToSet;
+    data['command'] = 'SetObject?' + getRoomPrefixSelectorFromSDSS(itemId) + itemId + '=' + valueToSet;
     console.log(data);
     let endPoint = data['plcName'] !== undefined ? TECO_ROUTE_WITH_COOKIE_ENDPOINT : TECO_API_ENDPOINT;
 
@@ -119,11 +98,6 @@ export class Light extends React.Component {
             value: valueToSet,
             lastUserCall: getCurrentTimeInMs(),
         })
-    }
-
-    // GET VALUE
-    loadCurrentValue() {
-        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccessfulCall)
     }
 
     // set value
@@ -203,11 +177,6 @@ export class ReadOnly extends React.Component {
         })
     }
 
-    // GET VALUE
-    loadCurrentValue() {
-        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccessfulCall)
-    }
-
     render() {
         // Set newer value if it wasnt already refreshed by user click.
         let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
@@ -254,11 +223,6 @@ export class ThermostatValue extends React.Component {
             value: valueToSet,
             lastUserCall: getCurrentTimeInMs(),
         })
-    }
-
-    // GET VALUE
-    loadCurrentValue() {
-        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccessfulCall)
     }
 
     handleSubmit(event) {
@@ -325,11 +289,6 @@ export class BooleanGridItem extends React.Component {
             value: valueToSet,
             lastUserCall: getCurrentTimeInMs(),
         })
-    }
-
-    // GET VALUE
-    loadCurrentValue() {
-        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccesfulCall)
     }
 
     // set value

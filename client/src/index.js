@@ -10,14 +10,15 @@ import * as DataSourceUtils from "./DataSourceUtils.js";
 import {ConnectionStatusCheck} from './connectionStatus';
 import {DataRefresher} from './dataRefresher';
 import {Loader} from './loader';
+import * as Utils from './utils';
 
 const Logger = require('logplease');
 const logger = Logger.create('index');
 Logger.setLogLevel(Logger.LogLevels.DEBUG);
 
 const GET_LIST_OF_OBJECTS = "GetList";
+const GET_OBJECT = "GetObject?";
 const THERMOSTAT_TEMP = 'tempTherm';
-const MS_TO_S = 1000;
 const IS_PRODUCTION_ENVIRONMENT = process.env.NODE_ENV === 'production';
 
 //http://192.168.134.176/TecoApi/GetList
@@ -36,11 +37,10 @@ class Main extends React.Component {
             plcName: "",
 
             // ---------------
-            wasLoginSubmitted: false,
+            wasLoginSubmitted: false, // primary usage of this variable is to start/stop loader
             selectedRoom: null, // currently user selected room
             postRequestData: null, // login data
-            objects: null,
-            roomToSDSmap: null,
+            roomToSDSmap: null, // room -> SDS
             isLocalhostSwitchOn: false,
             showDiagramPage: false,
 
@@ -99,29 +99,43 @@ class Main extends React.Component {
                 alert('Request failed. Error: ' + JSON.stringify(response.data.error));
                 return;
             }
-            // remove public data that are not SDSS (they have to start with 'NOPE_'
-            for (let key in response.data) {
-                if (key.startsWith('NOPE_'))
-                    delete response.data[key];
-            }
+            // prepare room command
+            let command = GET_OBJECT;
+            for (let key in response.data)
+                if (key.startsWith('ROOM_'))
+                    command = command + key + '&';
+            command.slice(0, -1);
+            logger.debug('Command to load all rooms: ' + command);
+            // another request to load SDSS of rooms
+            data = Utils.getPostRequestWithNewCommand(data, command);
+            axiosWithTimeout.post(endPoint, data).then((response) => {
+                if (response.data.error !== undefined) {
+                    alert('Request failed. Error: ' + JSON.stringify(response.data.error));
+                    return;
+                }
+                let SDSSArray = [];
+                for (let room in response.data) {
+                    logger.info(room);
+                    for (let sdss in response.data[room])
+                        SDSSArray.push(sdss);
+                }
+                logger.debug('SDSS from those rooms:' + SDSSArray);
+                let map;
+                try {
+                    map = DataSourceUtils.createRoomToSDSmap(SDSSArray);
+                } catch (error) {
+                    alert(error);
+                }
+                console.log(map);
 
-            console.log(response.data);
-            let map;
-            try {
-                map = DataSourceUtils.createRoomToSDSmap(response.data);
-            } catch (error) {
-                alert(error);
-            }
-            console.log(map);
-
-            this.setState({
-                wasLoginSubmitted: false,
-                objects: response.data,
-                roomToSDSmap: map,
-                postRequestData: this.prepareDataForTecoApi(isTecoRoute, null, cookie)
-            })
-
+                this.setState({
+                    wasLoginSubmitted: false,
+                    roomToSDSmap: map,
+                    postRequestData: this.prepareDataForTecoApi(isTecoRoute, null, cookie)
+                })
+            });
         }).catch((error) => {
+            this.setState({wasLoginSubmitted: false});
             if (error.response) {
                 alert(error.response.data);
                 console.log(error.response.data);
@@ -149,6 +163,8 @@ class Main extends React.Component {
                     console.log(error.response.data);
                 } else
                     alert('No answer from IP address: ' + this.state.ipAddress);
+                // if login was not succesfull, stop Loader
+                this.setState({wasLoginSubmitted: false})
             });
         } else
             this.loadAllRooms(isTecoRoute, null, GridItem.TECO_API_ENDPOINT, loginData);
@@ -229,7 +245,7 @@ class Main extends React.Component {
             <div>
                 <a href={"/#"} className="active_chat" onClick={this.negateDiagramState}>
                     <div className="leftColumn">
-                        <img className="center" height="30" width="30" src="return-button.svg" alt="Logo"/>
+                        <img className="center" height="30" width="30" src="return-button.svg" alt="Back button" title="Back"/>
                     </div>
                 </a>
                 <DiagramPage/>
@@ -244,7 +260,7 @@ class Main extends React.Component {
         if (this.state.wasLoginSubmitted)
             return <Loader/>;
         // the 1st tag is to make it click-able
-        if (this.state.objects === null || this.state.objects === undefined)
+        if (this.state.roomToSDSmap === null || this.state.roomToSDSmap === undefined)
             return this.createLoginForm();
         // diagram page
         else if (this.state.showDiagramPage)
@@ -322,7 +338,7 @@ class Main extends React.Component {
                     <div>
                         <a href={"/#"} className="active_chat" onClick={() => this.unselectRoom()}>
                             <div className="leftColumn">
-                                <img className="center" height="42" width="42" src="return-button.svg" alt="Logo"/>
+                                <img className="center" height="42" width="42" src="return-button.svg" alt="Logo" title="Back"/>
                             </div>
                         </a>
                         <div className="rightColumn">

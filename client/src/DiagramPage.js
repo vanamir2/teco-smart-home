@@ -80,7 +80,7 @@ export class DiagramPage extends React.Component {
             <div>
                 <a href={"/#"} className="active_chat" onClick={this.handleDateSubmit}>
                     <div className="rightColumn2">
-                        <img className="center" height="30" width="30" src="refresh.png" alt="Logo"/>
+                        <img className="center" height="30" width="30" src="refresh.png" alt="Logo" title="Refresh"/>
                     </div>
                 </a>
                 <ComponentUtils.MaterialSwitch customClass={"login-form-withoutNewLineAndWidth"}  name={"Load entire day"} checked={this.state.loadEntireDaySwitch} handleChange={this.handleSwitchChange}/>
