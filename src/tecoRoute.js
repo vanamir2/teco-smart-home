@@ -1,4 +1,3 @@
-process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const fetch = require('node-fetch'); // https://www.npmjs.com/package/node-fetch
 const logger = require('logplease').create('TecoRoute');
 const crypto = require('crypto'); // SHA1
@@ -91,7 +90,7 @@ module.exports.getRoutePLC = function getRoutePLC(string) {
     let b = string.indexOf(";", a);
     if (b === -1) b = string.length;
     let routePLC = unescape(string.substring(a, b));
-    logger.info("RoutePLC=" + routePLC);
+    logger.debug("RoutePLC=" + routePLC);
     return routePLC;
 };
 
@@ -100,7 +99,7 @@ module.exports.getSoftPLC = function getSoftPLC(string) {
     let b = string.indexOf(";", a);
     if (b === -1) b = string.length;
     let softPLC = unescape(string.substring(a, b));
-    logger.info("SoftPLC=" + softPLC);
+    logger.debug("SoftPLC=" + softPLC);
     return softPLC;
 };
 

@@ -14,7 +14,7 @@ import * as Utils from './utils';
 
 const Logger = require('logplease');
 const logger = Logger.create('index');
-Logger.setLogLevel(Logger.LogLevels.DEBUG);
+Logger.setLogLevel(Logger.LogLevels.INFO);
 
 const GET_LIST_OF_OBJECTS = "GetList";
 const GET_OBJECT = "GetObject?";

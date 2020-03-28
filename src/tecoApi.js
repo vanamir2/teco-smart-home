@@ -1,4 +1,3 @@
-process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const fetch = require('node-fetch');
 const logger = require('logplease').create('TecoApi');
 const md5 = require("md5");
@@ -77,7 +76,7 @@ function generateCnonce(length) {
 /* Returns www-auth header. **/
 function getWwwAuthenticate(headers) {
     const wwwAuthenticate = headers.get('www-authenticate');
-    logger.info("wwwAuth=" + wwwAuthenticate);
+    logger.debug("wwwAuth=" + wwwAuthenticate);
     return wwwAuthenticate;
 }
 
@@ -111,7 +110,7 @@ function getDaaHash(username, password, uri, nonce, nc, cnonce) {
     const ha2 = md5(TECOAPI_HTTP_METHOD + ":" + uri);
     logger.debug('Hash2: ' + ha2);
     const hash = md5(ha1 + ":" + nonce + ":" + nc + ":" + cnonce + ":" + TECOAPI_QOP + ":" + ha2);
-    logger.info('Final hash: ' + hash);
+    logger.debug('Final hash: ' + hash);
     return hash;
 }
 

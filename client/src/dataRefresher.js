@@ -2,7 +2,7 @@
 
 import React from 'react';
 import axios from "axios";
-import {TECO_ROUTE_WITH_COOKIE_ENDPOINT, ROOM_PREFIX} from "./GridItem";
+import {TECO_API_ENDPOINT, TECO_ROUTE_WITH_COOKIE_ENDPOINT, ROOM_PREFIX} from "./GridItem";
 import {createSDSStoValueMap} from "./DataSourceUtils";
 
 const logger = require('logplease').create('dataRefresher');
@@ -29,9 +29,11 @@ export class DataRefresher extends React.Component {
         requestData['command'] = 'GetObject?' + roomWithPrefix;
         logger.debug(requestData);
 
+        let ENDPOINT = requestData.ipAddress !== undefined ? TECO_API_ENDPOINT : TECO_ROUTE_WITH_COOKIE_ENDPOINT;
+
         const axiosWithTimeout = axios.create({timeout: TIMEOUT,});
         // http://route.tecomat.com:61682/PAGE1.XML
-        axiosWithTimeout.post(TECO_ROUTE_WITH_COOKIE_ENDPOINT, requestData).then((response) => {
+        axiosWithTimeout.post(ENDPOINT, requestData).then((response) => {
             let roomData = response.data[roomWithPrefix];
             logger.info(roomData);
             // create and insert map

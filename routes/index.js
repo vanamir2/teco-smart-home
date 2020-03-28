@@ -1,10 +1,10 @@
-process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const router = require('express').Router();
+require("dotenv").config();
 
 // logger
 const Logger = require('logplease');
 const logger = Logger.create('index');
-Logger.setLogLevel(Logger.LogLevels.DEBUG);
+Logger.setLogLevel(process.env.LOGGER_LEVEL);
 
 // local sources
 const constants = require('../src/constants');
@@ -59,6 +59,11 @@ router.post('/data', (req, res) => {
 
 // get status of connection
 router.post('/statusOfConnection', (req, res) => {
+    // localhost connection returns false - it is OFFLINE by default
+    if( req.body.ipAddress !== undefined ){
+        res.send(false);
+        return;
+    }
     const url = constants.TECOROUTE_URL + constants.COMMAND_GET_OBJECT + constants.TECOAPI_STATUS;
     TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, TecoRoute.getRoutePLC(req.body.cookie), TecoRoute.getSoftPLC(req.body.cookie));
 });

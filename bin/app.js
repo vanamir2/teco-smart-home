@@ -4,8 +4,10 @@ const path = require('path');
 const app = express();
 const logger = require('logplease').create('backend-app');
 
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+// https://stackoverflow.com/questions/23259168/what-are-express-json-and-express-urlencoded/51844327
+const bodyParser = require('body-parser');
+app.use(bodyParser.json()); // To use express inbuild middleware that recognize incoming request object as JSON object.
+app.use(bodyParser.urlencoded({extended: true})); // To recognize incoming request object as strings or arrays.
 app.use(express.static(path.join(__dirname, '../public')));
 
 // incoming request logging
