@@ -8,6 +8,7 @@ import * as CanvasConstants from './canvas/CanvasConstants';
 import axios from "axios";
 import {REQUEST_TIMEOUT} from "./GridItem";
 import * as ComponentUtils from "./ComponentUtils";
+import {Loader} from "./loader";
 
 const logger = require('logplease').create('DiagramPage');
 
@@ -73,7 +74,7 @@ export class DiagramPage extends React.Component {
         logger.debug("Day value=" + this.state.dayValue);
         if (this.state.graphData === null) {
             this.loadData(this.state.loadEntireDaySwitch, this.state.dayValue);
-            return <div className="loader"/>;
+            return <Loader/>;
         }
         return (
             <div>

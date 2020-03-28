@@ -26,6 +26,14 @@ export function createRoomToSDSmap(sDSList) {
     return map;
 }
 
+export function createSDSStoValueMap(SDSSList) {
+    let map = new Map();
+    for (let key in SDSSList)
+        if (SDSSList.hasOwnProperty(key))
+            map.set(key, SDSSList[key]);
+    return map;
+}
+
 export const BOOLEAN_DATA_TYPE = "BOO";
 
 export const RED_LIGHT = "lightRed";

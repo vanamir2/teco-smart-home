@@ -5,6 +5,7 @@ export const TECO_ROUTE_LOGIN_ENDPOINT = '/tecoRouteLogin';
 export const TECO_API_ENDPOINT = '/TecoApi';
 export const TECO_ROUTE_WITH_COOKIE_ENDPOINT = '/TecoApiViaTecoRouteWithCookie';
 export const REQUEST_TIMEOUT = 7000;
+import {INTERVAL_BETWEEN_STATUS_REFRESH} from './dataRefresher'
 
 const logger = require('logplease').create('GridItem');
 
@@ -108,29 +109,35 @@ export class Light extends React.Component {
             name: props.name,
             onClick: props.onClick,
             value: "",
+            lastUserCall: 0,
         };
-        this.setValueAfterSuccesfullCall = this.setValueAfterSuccesfullCall.bind(this);
-        this.loadCurrentValue();
+        this.setValueAfterSuccessfulCall = this.setValueAfterSuccessfulCall.bind(this);
     }
 
-    setValueAfterSuccesfullCall(valueToSet) {
-        this.setState({value: valueToSet})
+    setValueAfterSuccessfulCall(valueToSet) {
+        this.setState({
+            value: valueToSet,
+            lastUserCall: getCurrentTimeInMs(),
+        })
     }
 
     // GET VALUE
     loadCurrentValue() {
-        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccesfullCall)
+        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccessfulCall)
     }
 
     // set value
     switchOnOff() {
         const valueToSet = this.state.value > 0 ? 0 : 100;
-        setValueToTecoApi(this.props.postRequestData, this.props.id, valueToSet, this.setValueAfterSuccesfullCall)
+        setValueToTecoApi(this.props.postRequestData, this.props.id, valueToSet, this.setValueAfterSuccessfulCall)
     }
 
+    // TODO - toto je stejne jako gridItem BooleanGridItem
     render() {
-        if (this.props.performRefresh)
-            this.loadCurrentValue();
+        // Set newer value if it wasnt already refreshed by user click.
+        let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
+        if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
+            this.setState({value: this.props.newValue});
         // the 1st tag is to make it click-able
         return (
             <a href={"/#"} className="grid-item" onClick={() => {
@@ -151,8 +158,10 @@ export class RedLight extends Light {
         let src = "redLightOff.png";
         let fontColor = "";
 
-        if (this.props.performRefresh)
-            this.loadCurrentValue();
+        // Set newer value if it wasnt already refreshed by user click.
+        let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
+        if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
+            this.setState({value: this.props.newValue});
         // the 1st tag is to make it click-able
         if (this.state.value === 100) {
             src = "redLightOn.png";
@@ -182,23 +191,28 @@ export class ReadOnly extends React.Component {
             name: props.name,
             onClick: props.onClick,
             value: "",
+            lastUserCall: 0,
         };
-        this.setValueAfterSuccesfullCall = this.setValueAfterSuccesfullCall.bind(this);
-        this.loadCurrentValue();
+        this.setValueAfterSuccessfulCall = this.setValueAfterSuccessfulCall.bind(this);
     }
 
-    setValueAfterSuccesfullCall(valueToSet) {
-        this.setState({value: valueToSet})
+    setValueAfterSuccessfulCall(valueToSet) {
+        this.setState({
+            value: valueToSet,
+            lastUserCall: getCurrentTimeInMs(),
+        })
     }
 
     // GET VALUE
     loadCurrentValue() {
-        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccesfullCall)
+        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccessfulCall)
     }
 
     render() {
-        if (this.props.performRefresh)
-            this.loadCurrentValue();
+        // Set newer value if it wasnt already refreshed by user click.
+        let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
+        if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
+            this.setState({value: this.props.newValue});
         // the 1st tag is to make it click-able
         return (
             <div className="grid-item">
@@ -218,12 +232,12 @@ export class ThermostatValue extends React.Component {
             value: "",
             isStateSetValue: false,
             valueToSet: "",
+            lastUserCall: 0,
         };
         this.handleChange = this.handleChange.bind(this);
         this.changeState = this.changeState.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.setValueAfterSuccesfullCall = this.setValueAfterSuccesfullCall.bind(this);
-        this.loadCurrentValue();
+        this.setValueAfterSuccessfulCall = this.setValueAfterSuccessfulCall.bind(this);
     }
 
     changeState() {
@@ -235,25 +249,30 @@ export class ThermostatValue extends React.Component {
         this.setState({[event.target.name]: event.target.value});
     }
 
-    setValueAfterSuccesfullCall(valueToSet) {
-        this.setState({value: valueToSet})
+    setValueAfterSuccessfulCall(valueToSet) {
+        this.setState({
+            value: valueToSet,
+            lastUserCall: getCurrentTimeInMs(),
+        })
     }
 
     // GET VALUE
     loadCurrentValue() {
-        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccesfullCall)
+        getValueFromTecoApi(this.props.postRequestData, this.props.id, this.setValueAfterSuccessfulCall)
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        setValueToTecoApi(this.props.postRequestData, this.props.id, this.state.valueToSet, this.setValueAfterSuccesfullCall);
+        setValueToTecoApi(this.props.postRequestData, this.props.id, this.state.valueToSet, this.setValueAfterSuccessfulCall);
         this.changeState();
     }
 
     render() {
+        // Set newer value if it wasnt already refreshed by user click.
+        let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
+        if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
+            this.setState({value: this.props.newValue});
         let innerSpace = [];
-        if (this.props.performRefresh)
-            this.loadCurrentValue();
         if (!this.state.isStateSetValue) {
             innerSpace.push(
                 <a key={"SUB"} href={"/#"} onClick={() => {
@@ -296,13 +315,16 @@ export class BooleanGridItem extends React.Component {
             id: props.id,
             name: props.name,
             value: "",
+            lastUserCall: 0,
         };
         this.setValueAfterSuccesfulCall = this.setValueAfterSuccesfulCall.bind(this);
-        this.loadCurrentValue();
     }
 
     setValueAfterSuccesfulCall(valueToSet) {
-        this.setState({value: valueToSet})
+        this.setState({
+            value: valueToSet,
+            lastUserCall: getCurrentTimeInMs(),
+        })
     }
 
     // GET VALUE
@@ -317,8 +339,10 @@ export class BooleanGridItem extends React.Component {
     }
 
     render() {
-        if (this.props.performRefresh)
-            this.loadCurrentValue();
+        // Set newer value if it wasnt already refreshed by user click.
+        let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
+        if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
+            this.setState({value: this.props.newValue});
         // the 1st tag is to make it click-able
         return (
             <a href={"/#"} className="grid-item" onClick={() => {
@@ -331,4 +355,9 @@ export class BooleanGridItem extends React.Component {
             </a>
         );
     }
+}
+
+// from UNIX EPOCH
+function getCurrentTimeInMs() {
+    return new Date().getTime();
 }

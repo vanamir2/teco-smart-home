@@ -172,7 +172,7 @@
 
 .rightColumn {
     width: 80%;
-    float: right;
+    float: left;
 }
 
 .rightColumn2 {
@@ -201,6 +201,9 @@
     width: 120px;
     height: 120px;
     animation: spin 2s linear infinite;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @keyframes spin {
@@ -224,9 +227,11 @@
     color: #ff2527;
 }
 
+// loader https://codepen.io/andreasstorm/pen/QZEKWr
+// <!-- Credit: https://dribbble.com/shots/5092176-Newton-Loader -->
 .connectionStatusFooter {
     font-family: 'Quicksand', sans-serif;
-    text-align: center;
+    text-align: right;
     height:20px;
     width: 100%;
     background-image: none;
@@ -236,4 +241,98 @@
     position: fixed;
     bottom: 0pt;
     left: 0pt;
+}
+
+.connectionStatusFooterLeft {
+    font-family: 'Quicksand', sans-serif;
+    text-align: left;
+    height:20px;
+    width: 100%;
+    background-image: none;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    background-position: 0 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+
+.gooey {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 142px;
+    height: 40px;
+    margin: -20px 0 0 -71px;
+    background: #fff;
+    filter: contrast(20);
+}
+.gooey .dot {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 12px;
+    left: 15px;
+    filter: blur(4px);
+    background: #000;
+    border-radius: 50%;
+    transform: translateX(0);
+    animation: dot 2.8s infinite;
+}
+.gooey .dots {
+    transform: translateX(0);
+    margin-top: 12px;
+    margin-left: 31px;
+    animation: dots 2.8s infinite;
+}
+.gooey .dots span {
+    display: block;
+    float: left;
+    width: 16px;
+    height: 16px;
+    margin-left: 16px;
+    filter: blur(4px);
+    background: #000;
+    border-radius: 50%;
+}
+@-moz-keyframes dot {
+    50% {
+        transform: translateX(96px);
+    }
+}
+@-webkit-keyframes dot {
+    50% {
+        transform: translateX(96px);
+    }
+}
+@-o-keyframes dot {
+    50% {
+        transform: translateX(96px);
+    }
+}
+@keyframes dot {
+    50% {
+        transform: translateX(96px);
+    }
+}
+@-moz-keyframes dots {
+    50% {
+        transform: translateX(-31px);
+    }
+}
+@-webkit-keyframes dots {
+    50% {
+        transform: translateX(-31px);
+    }
+}
+@-o-keyframes dots {
+    50% {
+        transform: translateX(-31px);
+    }
+}
+@keyframes dots {
+    50% {
+        transform: translateX(-31px);
+    }
 }
