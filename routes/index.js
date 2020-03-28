@@ -21,23 +21,29 @@ const TECOAPI_USERNAME = constants.TECOAPI_USERNAME;
 const TECOAPI_PW = constants.TECOAPI_PW;
 
 /** Performs TecoRoute login based on username, pw and plcName.<br/>
- * See apiary documentation for more info: TODO .
+ * See apiary documentation for more info: {@link https://tecosmarthome.docs.apiary.io/}.
  * */
 router.post('/tecoRouteLogin', (req, res) => {
     TecoRoute.tecoRouteLogin(res, req.body.tecoRouteUsername, req.body.tecoRoutePw, req.body.plcName);
 });
 
-// TecoRoute already logged, sends request to TecoApi
-router.post('/TecoApiViaTecoRouteWithCookie', (req, res) => {
+/** TecoRoute already logged.
+ *  Performs TecoApi request via TecoRoute service based on username, pw, routePLC, softPLC and command.<br/>
+ * See apiary documentation for more info: {@link https://tecosmarthome.docs.apiary.io/}.
+ * */
+router.post('/tecoApiViaTecoRouteWithCookie', (req, res) => {
     const url = constants.TECOROUTE_URL + req.body.command;
     logger.debug('Request body is= ' + JSON.stringify(req.body));
     TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, req.body.routePLC, req.body.softPLC);
 });
 
-// TecoRoute NOT logged yet, sends request to TecoApi
-router.post('/TecoApiViaTecoRoute', (req, res) => {
+/** TecoRoute NOT logged yet. TecoApi requests through TecoRoute without login cookie.<br/>
+ *  Performs TecoApi request via TecoRoute service (with new login) based on credentials and command.<br/>
+ * See apiary documentation for more info: {@link https://tecosmarthome.docs.apiary.io/}.
+ * */
+router.post('/tecoApiViaTecoRoute', (req, res) => {
     const url = 'http://route.tecomat.com:61682/TecoApi/' + req.body.command;
-    logger.debug('Request body is= ' + req.body);
+    logger.debug('Request body= ' + req.body);
     TecoRoute.sendToTecoApiViaTecoRoute(res, url, req.body.tecoRouteUsername, req.body.tecoRoutePw, req.body.plcName, req.body.username, req.body.password);
 });
 
@@ -60,9 +66,10 @@ router.post('/data', (req, res) => {
 });
 
 // get status of connection
+// TODO - do dokumentace napsat, ze je predpoklad promenna :status na strane PLC
 router.post('/statusOfConnection', (req, res) => {
     // localhost connection returns false - it is OFFLINE by default
-    if( req.body.ipAddress !== undefined ){
+    if (req.body.ipAddress !== undefined) {
         res.send(false);
         return;
     }
@@ -72,9 +79,11 @@ router.post('/statusOfConnection', (req, res) => {
 
 // ------------------------------------------------------------------------------- DEVELOPER ENDPOINTS
 if (process.env.NODE_ENV !== 'production') {
-    // http://192.168.134.176/TecoApi/GetList
-    // localhost TecoApi request
-    router.post('/TecoApi', (req, res) => {
+    /** Performs localhost TecoApi request based on username, pw, ipAddress and command.<br/>
+     * See apiary documentation for more info: {@link https://tecosmarthome.docs.apiary.io/}.
+     * */
+    router.post('/tecoApi', (req, res) => {
+        //     // http://192.168.134.176/TecoApi/GetList
         const url = 'http://' + req.body.ipAddress + '/TecoApi/' + req.body.command;
         logger.debug(url);
         TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null);

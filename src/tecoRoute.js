@@ -38,15 +38,16 @@ module.exports.tecoRouteLogin = function tecoRouteLogin(result, tecoRouteUsernam
             if (!isStatusOk(res, reject, result))
                 return;
             let softPLC = module.exports.getSoftPLC(getCookieString(res.headers));
+            let cookieParts = {"routePLC": routePLC, "softPLC": softPLC};
             if (resolve !== undefined)
-                resolve({"routePLC": routePLC, "softPLC": softPLC});
+                resolve(cookieParts);
             else
-                result.send(constants.COOKIE_STRING.format(routePLC, softPLC));
+                result.send(cookieParts);
         });
     }).catch(e => {
         logger.error(e);
-        if (doOnSuccess === null)
-            result.status(401).send('Error while performing TecoRoute request.');
+        if (reject !== undefined)
+            reject('Error while performing TecoRoute request.');
         else
             result.send(constants.GA_ERROR_RESPONSE);
     });

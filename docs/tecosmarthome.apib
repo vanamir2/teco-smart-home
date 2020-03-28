@@ -1,24 +1,19 @@
 FORMAT: 1A
 HOST: https://polls.apiblueprint.org/
 
-# teco-smart-home API
-
-API blueprint describing teco-smart-home backend of master thesis. 
-
-
-
-# group TecoRoute & TecoApi
-This API group contains all endpoints associated with TecoRoute and TecoApi service.
+# Teco smart home API
+API blueprint describing teco-smart-home backend of master thesis.<br/>
+<a href="https://github.com/vanamir2/teco-smart-home">Github repository</a>.
 
 ## TecoRoute Login [/tecoRouteLogin]
-
-### tecoRouteLogin [POST]
 Those login values are same as the one used on official site for
 <a href="http://route.tecomat.com:61682/TR_LOGIN.XML">TecoRoute login</a>.
 You have to own active account registered on
 <a href="https://portal.tecomat.com/">TecoRoute service</a>. Otherwise you have to use localhost connection.
 
 You do not have to call this endpoint when using localhost connection.
+### tecoRouteLogin [POST]
+
 
 + Attributes
     + tecoRouteUsername: john.wick (string, required) - username for TecoRoute
@@ -28,140 +23,129 @@ You do not have to call this endpoint when using localhost connection.
 + Request (application/json)
 
         {
-            "email": "test@test.com",
-            "password": "secret",
+            "tecoRouteUsername": "john.wick",
+            "tecoRoutePw": "secret",
+            "plcName": "myCoolPlc"
         }
 
-+ Response 200 (text/plain)
-
-        User sign up was succesfull.
-        
-## Logout [/user/logout]
-User does not send anything. Logout is done based on an active session.
-
-### Logout [GET]
-
 + Response 200 (application/json)
-        
-+ Response 403 (text/plain)
 
-        You are already logged out.        
+        {
+            "routePLC": "92737583",
+            "softPLC": "386084126"
+        }
         
-## Sign up [/user/signup]
++ Response 500 (text/plain)
 
-### Signup [POST]
+        Specific error message.      
+ 
+# group TecoApi requests      
+There are 3 types of TecoApi requests:<br/>
+ - 1st - direct TecoApi requests.<br/>
+ - 2nd - TecoApi requests through TecoRoute **with** login cookie. <br/>
+ - 3rd - TecoApi requests through TecoRoute **without** login cookie (new login to TecoRoute is performed). <br/>
+ 
+**All of those request returns exactly the same answer as if requested command was runned directly on PLC via browser.**
+ 
+## Direct TecoApi requests [/tecoApi]
+Direct TecoApi requests. They are working **only in develop environment** with local direct connection.
+Your computer must be in the same network. It is possible to use VPN to achieve this state. <br/>
+
+### tecoApi [POST]
+
 + Attributes
-    + email: john@appleseed.com (string, required) - e-mail used as login name
-    + password: secretPW (string, required) - password
-    + passwordConfirm: secretPW (string, required) - password confirmation
-    + name: Karel (string, required) - name of a user
+    + username: admin (string, required) - username for TecoApi
+    + password: veryStronKpw (string, required) - password for TecoApi
+    + ipAddress: 192.168.134.176 (string, required) - IPv4 address of PLC interface
+    + command: GetList (string, required) - TecoApi command
 
 + Request (application/json)
 
         {
-            "email": "test@test.com",
-            "password": "secret",
-            "passwordConfirm": "secret",
-            "name": "Karel",
+            "username": "admin",
+            "password": "veryStronKpw",
+            "ipAddress": "192.168.134.176",
+            "command": "GetList"
         }
-
-+ Response 200 (text/html; charset=utf-8)
-
-        User sign up was succesfull.     
-        
-+ Response 403 (text/html; charset=utf-8)
-
-        User with this email already exists.            
-        
-## Login status [/user/status]
-
-### Status [GET]
 
 + Response 200 (application/json)
 
         {
-            "name": "Franta",
-            "email": "test@test.com"
-        }        
-        
-+ Response 401 (text/plain)
-
-        There is no active session. Please log in.         
-
-# group CHAT
-Chat API group contains all associated with chatting rooms. 
-
-## Get all rooms [/chat/getAll]
-Get all rooms based on current session. Rooms are sorted descending by timestamp.
-
-### getAll [GET]
-
-+ Response 200 (application/json)
-
-        [{   
-            "name":"Krk",
-            "id":5,
-            "timestamp":"November 10  20:08",
-            "lastmsg":"Welcome to aChat"
-        },{   
-            "name":"Suk",
-            "id":9,
-            "timestamp":"November 12  12:08",
-            "lastmsg":"Welcome to aChat"
+            "ROOM_T2LDvXZhY8OtIHBva29q": {},
+            "ROOM_TcOtc3Rub3N0IDI": {},
+            "status": {}
         }
-        ]
         
++ Response 500 (text/plain)
 
-## Add room [/chat/add]
+        Specific error message.         
 
-### add [POST]
+## TecoApi with cookie [/tecoApiViaTecoRouteWithCookie]
+TecoApi requests through TecoRoute **with** login cookie.
+
+### tecoApiViaTecoRouteWithCookie [POST]
+
++ Attributes
+    + username: admin (string, required) - username for TecoApi
+    + password: veryStronKpw (string, required) - password for TecoApi
+    + routePLC: 92737583 (string, required) - routePLC obtained from previous TecoRoute login
+    + softPLC: 386084126 (string, required) - softPLC obtained from previous TecoRoute login
+    + command: GetList (string, required) - TecoApi command
 
 + Request (application/json)
 
         {
-            "emails": [ "d@d", "a@a", "d@d" ] ,
-            "chatName": "Cool place"
+            "username": "admin",
+            "password": "veryStronKpw",
+            "routePLC": "92737583",
+            "softPLC": "386084126"
+            "command": "GetList"
         }
-
-+ Response 200 (text/html; charset=utf-8)
-
-        User d@d was added ☺
-        User a@a was added ☺ 
-        
-# group MESSAGES
-API group that contains all associated with messages.
-
-## Get messages [/message/getLastFifty]
-Get last 50 messages in requested chat. Descending order by timestamp.
-
-### getLastFifty [GET]
 
 + Response 200 (application/json)
 
-        [{   
-            "id": 8,
-            "text": "Test message",
-            "time": "November 10  19:44:16",
-            "sender": "test@test.com" 
-        },{   
-            "id": 9,
-            "text": "Test message 2",
-            "time": "November 10  19:44:25",
-            "sender": "test@test.com" 
+        {
+            "ROOM_T2LDvXZhY8OtIHBva29q": {},
+            "ROOM_TcOtc3Rub3N0IDI": {},
+            "status": {}
         }
-        ]
-      
+        
++ Response 500 (text/plain)
 
-## Add message [/message/add]
+        Specific error message.  
 
-### add [POST]
+## TecoApi without cookie [/tecoApiViaTecoRoute]
+TecoApi requests through TecoRoute **without** login cookie.<br/>New login to TecoRoute is performed based on received credentials.
+
+### tecoApiViaTecoRoute [POST]
+
++ Attributes
+    + tecoRouteUsername: john.wick (string, required) - username for TecoRoute
+    + tecoRoutePw: nremSleepIsTheKey (string, required) - password for TecoRoute
+    + plcName: myCoolPlc (string, required) - PLC name used with TecoRoute login
+    + username: admin (string, required) - username for TecoApi
+    + password: veryStronKpw (string, required) - password for TecoApi
+    + command: GetList (string, required) - TecoApi command
 
 + Request (application/json)
 
         {
-            "message": "Welcome to our chat friend." ,
-            "sender": "test@test.com",
-            "chatId": 20
+            "tecoRouteUsername": "john.wick",
+            "tecoRoutePw": "secret",
+            "plcName": "myCoolPlc"
+            "username": "admin",
+            "password": "veryStronKpw",
+            "command": "GetList"
         }
 
 + Response 200 (application/json)
+
+        {
+            "ROOM_T2LDvXZhY8OtIHBva29q": {},
+            "ROOM_TcOtc3Rub3N0IDI": {},
+            "status": {}
+        }
+        
++ Response 500 (text/plain)
+
+        Specific error message.  

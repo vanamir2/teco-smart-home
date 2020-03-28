@@ -72,25 +72,7 @@ class Main extends React.Component {
         this.setState({showDiagramPage: !this.state.showDiagramPage});
     }
 
-    getRoutePLC(string) {
-        let a = string.indexOf("RoutePLC=") + 9;
-        let b = string.indexOf(";", a);
-        if (b === -1) b = string.length;
-        let routePLC = unescape(string.substring(a, b));
-        logger.debug("RoutePLC=" + routePLC);
-        return routePLC;
-    }
-
-    getSoftPLC(string) {
-        let a = string.indexOf("SoftPLC=") + 8;
-        let b = string.indexOf(";", a);
-        if (b === -1) b = string.length;
-        let softPLC = unescape(string.substring(a, b));
-        logger.debug("SoftPLC=" + softPLC);
-        return softPLC;
-    };
-
-    prepareDataForTecoApi(isTecoRoute, command, cookie) {
+    prepareDataForTecoApi(isTecoRoute, command, routePLC, softPLC) {
         if (isTecoRoute)
             return {
                 username: this.state.username,
@@ -99,8 +81,8 @@ class Main extends React.Component {
                 tecoRoutePw: this.state.tecoRoutePw,
                 plcName: this.state.plcName,
                 command: command,
-                routePLC: cookie !== undefined  ? this.getRoutePLC(cookie) : undefined,
-                softPLC: cookie !== undefined  ? this.getSoftPLC(cookie) : undefined,
+                routePLC: routePLC,
+                softPLC: softPLC,
             };
         else
             return {
@@ -111,7 +93,7 @@ class Main extends React.Component {
             };
     }
 
-    loadAllRooms(isTecoRoute, cookie, endPoint, data) {
+    loadAllRooms(isTecoRoute, endPoint, data) {
         const axiosWithTimeout = axios.create({timeout: GridItem.REQUEST_TIMEOUT,});
         axiosWithTimeout.post(endPoint, data).then((response) => {
             if (response.data.error !== undefined) {
@@ -150,7 +132,7 @@ class Main extends React.Component {
                 this.setState({
                     wasLoginSubmitted: false,
                     roomToSDSmap: map,
-                    postRequestData: this.prepareDataForTecoApi(isTecoRoute, null, cookie)
+                    postRequestData: data
                 })
             });
         }).catch((error) => {
@@ -172,10 +154,12 @@ class Main extends React.Component {
         if (isTecoRoute) {
             // perform LOGIN
             axiosWithTimeout.post(GridItem.TECO_ROUTE_LOGIN_ENDPOINT, loginData).then((response) => {
-                let cookie = response.data;
-                logger.debug("Received cookie from TecoRoute login: " + cookie);
-                let loginDataWithCookie = this.prepareDataForTecoApi(isTecoRoute, command, cookie);
-                this.loadAllRooms(isTecoRoute, cookie, GridItem.TECO_ROUTE_WITH_COOKIE_ENDPOINT, loginDataWithCookie);
+                let routePLC = response.data.routePLC;
+                let softPLC = response.data.softPLC;
+                logger.debug("Received routePLC from TecoRoute login: " + routePLC);
+                logger.debug("Received softPLC from TecoRoute login: " + softPLC);
+                let loginDataWithCookie = this.prepareDataForTecoApi(isTecoRoute, command, routePLC, softPLC);
+                this.loadAllRooms(isTecoRoute, GridItem.TECO_ROUTE_WITH_COOKIE_ENDPOINT, loginDataWithCookie);
             }).catch((error) => {
                 if (error.response) {
                     alert(error.response.data);
@@ -186,7 +170,7 @@ class Main extends React.Component {
                 this.setState({wasLoginSubmitted: false})
             });
         } else
-            this.loadAllRooms(isTecoRoute, null, GridItem.TECO_API_ENDPOINT, loginData);
+            this.loadAllRooms(isTecoRoute, GridItem.TECO_API_ENDPOINT, loginData);
     }
 
     // univerzalni vyhodnoceni toho jakou property vzit
