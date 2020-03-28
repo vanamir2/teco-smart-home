@@ -20,7 +20,9 @@ const TECOROUTE_PLC = constants.TECOROUTE_PLC;
 const TECOAPI_USERNAME = constants.TECOAPI_USERNAME;
 const TECOAPI_PW = constants.TECOAPI_PW;
 
-// pefroms login
+/** Performs TecoRoute login based on username, pw and plcName.<br/>
+ * See apiary documentation for more info: TODO .
+ * */
 router.post('/tecoRouteLogin', (req, res) => {
     TecoRoute.tecoRouteLogin(res, req.body.tecoRouteUsername, req.body.tecoRoutePw, req.body.plcName);
 });
@@ -29,7 +31,7 @@ router.post('/tecoRouteLogin', (req, res) => {
 router.post('/TecoApiViaTecoRouteWithCookie', (req, res) => {
     const url = constants.TECOROUTE_URL + req.body.command;
     logger.debug('Request body is= ' + JSON.stringify(req.body));
-    TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, TecoRoute.getRoutePLC(req.body.cookie), TecoRoute.getSoftPLC(req.body.cookie));
+    TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, req.body.routePLC, req.body.softPLC);
 });
 
 // TecoRoute NOT logged yet, sends request to TecoApi
@@ -65,7 +67,7 @@ router.post('/statusOfConnection', (req, res) => {
         return;
     }
     const url = constants.TECOROUTE_URL + constants.COMMAND_GET_OBJECT + constants.TECOAPI_STATUS;
-    TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, TecoRoute.getRoutePLC(req.body.cookie), TecoRoute.getSoftPLC(req.body.cookie));
+    TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, req.body.routePLC, req.body.softPLC);
 });
 
 // ------------------------------------------------------------------------------- DEVELOPER ENDPOINTS

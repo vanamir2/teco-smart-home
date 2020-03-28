@@ -72,6 +72,24 @@ class Main extends React.Component {
         this.setState({showDiagramPage: !this.state.showDiagramPage});
     }
 
+    getRoutePLC(string) {
+        let a = string.indexOf("RoutePLC=") + 9;
+        let b = string.indexOf(";", a);
+        if (b === -1) b = string.length;
+        let routePLC = unescape(string.substring(a, b));
+        logger.debug("RoutePLC=" + routePLC);
+        return routePLC;
+    }
+
+    getSoftPLC(string) {
+        let a = string.indexOf("SoftPLC=") + 8;
+        let b = string.indexOf(";", a);
+        if (b === -1) b = string.length;
+        let softPLC = unescape(string.substring(a, b));
+        logger.debug("SoftPLC=" + softPLC);
+        return softPLC;
+    };
+
     prepareDataForTecoApi(isTecoRoute, command, cookie) {
         if (isTecoRoute)
             return {
@@ -81,7 +99,8 @@ class Main extends React.Component {
                 tecoRoutePw: this.state.tecoRoutePw,
                 plcName: this.state.plcName,
                 command: command,
-                cookie: cookie,
+                routePLC: cookie !== undefined  ? this.getRoutePLC(cookie) : undefined,
+                softPLC: cookie !== undefined  ? this.getSoftPLC(cookie) : undefined,
             };
         else
             return {

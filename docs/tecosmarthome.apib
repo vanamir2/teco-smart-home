@@ -1,0 +1,167 @@
+FORMAT: 1A
+HOST: https://polls.apiblueprint.org/
+
+# teco-smart-home API
+
+API blueprint describing teco-smart-home backend of master thesis. 
+
+
+
+# group TecoRoute & TecoApi
+This API group contains all endpoints associated with TecoRoute and TecoApi service.
+
+## TecoRoute Login [/tecoRouteLogin]
+
+### tecoRouteLogin [POST]
+Those login values are same as the one used on official site for
+<a href="http://route.tecomat.com:61682/TR_LOGIN.XML">TecoRoute login</a>.
+You have to own active account registered on
+<a href="https://portal.tecomat.com/">TecoRoute service</a>. Otherwise you have to use localhost connection.
+
+You do not have to call this endpoint when using localhost connection.
+
++ Attributes
+    + tecoRouteUsername: john.wick (string, required) - username for TecoRoute
+    + tecoRoutePw: nremSleepIsTheKey (string, required) - password for TecoRoute
+    + plcName: myCoolPlc (string, required) - PLC name used with TecoRoute login
+
++ Request (application/json)
+
+        {
+            "email": "test@test.com",
+            "password": "secret",
+        }
+
++ Response 200 (text/plain)
+
+        User sign up was succesfull.
+        
+## Logout [/user/logout]
+User does not send anything. Logout is done based on an active session.
+
+### Logout [GET]
+
++ Response 200 (application/json)
+        
++ Response 403 (text/plain)
+
+        You are already logged out.        
+        
+## Sign up [/user/signup]
+
+### Signup [POST]
++ Attributes
+    + email: john@appleseed.com (string, required) - e-mail used as login name
+    + password: secretPW (string, required) - password
+    + passwordConfirm: secretPW (string, required) - password confirmation
+    + name: Karel (string, required) - name of a user
+
++ Request (application/json)
+
+        {
+            "email": "test@test.com",
+            "password": "secret",
+            "passwordConfirm": "secret",
+            "name": "Karel",
+        }
+
++ Response 200 (text/html; charset=utf-8)
+
+        User sign up was succesfull.     
+        
++ Response 403 (text/html; charset=utf-8)
+
+        User with this email already exists.            
+        
+## Login status [/user/status]
+
+### Status [GET]
+
++ Response 200 (application/json)
+
+        {
+            "name": "Franta",
+            "email": "test@test.com"
+        }        
+        
++ Response 401 (text/plain)
+
+        There is no active session. Please log in.         
+
+# group CHAT
+Chat API group contains all associated with chatting rooms. 
+
+## Get all rooms [/chat/getAll]
+Get all rooms based on current session. Rooms are sorted descending by timestamp.
+
+### getAll [GET]
+
++ Response 200 (application/json)
+
+        [{   
+            "name":"Krk",
+            "id":5,
+            "timestamp":"November 10  20:08",
+            "lastmsg":"Welcome to aChat"
+        },{   
+            "name":"Suk",
+            "id":9,
+            "timestamp":"November 12  12:08",
+            "lastmsg":"Welcome to aChat"
+        }
+        ]
+        
+
+## Add room [/chat/add]
+
+### add [POST]
+
++ Request (application/json)
+
+        {
+            "emails": [ "d@d", "a@a", "d@d" ] ,
+            "chatName": "Cool place"
+        }
+
++ Response 200 (text/html; charset=utf-8)
+
+        User d@d was added ☺
+        User a@a was added ☺ 
+        
+# group MESSAGES
+API group that contains all associated with messages.
+
+## Get messages [/message/getLastFifty]
+Get last 50 messages in requested chat. Descending order by timestamp.
+
+### getLastFifty [GET]
+
++ Response 200 (application/json)
+
+        [{   
+            "id": 8,
+            "text": "Test message",
+            "time": "November 10  19:44:16",
+            "sender": "test@test.com" 
+        },{   
+            "id": 9,
+            "text": "Test message 2",
+            "time": "November 10  19:44:25",
+            "sender": "test@test.com" 
+        }
+        ]
+      
+
+## Add message [/message/add]
+
+### add [POST]
+
++ Request (application/json)
+
+        {
+            "message": "Welcome to our chat friend." ,
+            "sender": "test@test.com",
+            "chatId": 20
+        }
+
++ Response 200 (application/json)
