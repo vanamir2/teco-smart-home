@@ -17,6 +17,15 @@ function hasLoginError(data, res) {
     return false;
 }
 
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
 /**
  * Sends request to target URL with use of DAA. DAA is calculated based on username and password.
  *
@@ -44,16 +53,19 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
                 Cookie: constants.COOKIE_STRING.format(routePLC, softPLC),
             }
         }).then((res) => res.text())
+            .then((text) => IsJsonString(text) ? JSON.parse(text) : {})
             .then(data => {
                 logger.debug('Data received from 2st TecoApi request.');
                 logger.debug(data);
                 if (data.error !== undefined) {
+                    logger.error("Error while performing TecoApi request.\n\nError=" + JSON.stringify(data.error));
                     res.status(500).send("Error while performing TecoApi request.\n\nError=" + JSON.stringify(data.error));
+                    return;
                 }
                 if (doOnSuccess === null || doOnSuccess === undefined)
                     res.send(data);
                 else
-                    doOnSuccess(Object.values(JSON.parse(data))[0]);
+                    doOnSuccess(Object.values(data)[0]);
             })
     }).catch(e => {
         logger.error(e);
