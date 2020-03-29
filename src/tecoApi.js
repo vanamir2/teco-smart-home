@@ -43,7 +43,7 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
                 'Content-Type': 'application/json',
                 Cookie: constants.COOKIE_STRING.format(routePLC, softPLC),
             }
-        }).then((res) => res !== undefined ? res.json() : {})
+        }).then((res) => res.text())
             .then(data => {
                 logger.debug('Data received from 2st TecoApi request.');
                 logger.debug(data);
@@ -53,7 +53,7 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
                 if (doOnSuccess === null || doOnSuccess === undefined)
                     res.send(data);
                 else
-                    doOnSuccess(Object.values(data)[0]);
+                    doOnSuccess(Object.values(JSON.parse(data))[0]);
             })
     }).catch(e => {
         logger.error(e);
