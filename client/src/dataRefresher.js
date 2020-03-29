@@ -9,8 +9,8 @@ import {getPostRequestWithNewCommand} from "./utils";
 
 
 const logger = require('logplease').create('dataRefresher');
-export const INTERVAL_BETWEEN_STATUS_REFRESH = 3000;
-const TIMEOUT = 5000;
+export const INTERVAL_BETWEEN_STATUS_REFRESH = 3500;
+const TIMEOUT = 6000;
 
 
 export class DataRefresher extends React.Component {
@@ -36,7 +36,7 @@ export class DataRefresher extends React.Component {
         // http://route.tecomat.com:61682/PAGE1.XML
         axiosWithTimeout.post(ENDPOINT, requestData).then((response) => {
             let roomData = response.data[roomWithPrefix];
-            logger.info(roomData);
+            logger.debug(roomData);
             // create and insert map
             let SDSSmap = createSDSStoValueMap(roomData);
             this.props.insertSDSSfreshDataMap(SDSSmap);

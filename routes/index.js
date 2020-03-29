@@ -54,7 +54,9 @@ router.post('/webhook', (req, res) => {
     GoogleAssistant.handleWebHook(req, res);
 });
 
-// Endpoint to download data from Azure Storage Tables.
+/** Endpoint to download data from Azure Table storage..<br/>
+ * See apiary documentation for more info: {@link https://tecosmarthome.docs.apiary.io/}.
+ * */
 router.post('/data', (req, res) => {
     let hours = req.body.hours;
     let jumpByNFields = req.body.jumpByNFields;

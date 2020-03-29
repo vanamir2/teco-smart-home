@@ -1,57 +1,57 @@
 require("dotenv").config();
-let azure = require('azure-storage');
+const azure = require('azure-storage');
 const logger = require('logplease').create('AzureStorage');
-let tableService = azure.createTableService(process.env.AZURE_STORAGE_CONNECTION_STRING);
+const tableService = azure.createTableService(process.env.AZURE_STORAGE_CONNECTION_STRING);
+const Utils = require('./utils');
+const constants = require('./constants');
 
-/** Converts '1' to '01'. */
-function decimalToTwoDigits(number) {
-    return ("0" + number).slice(-2);
-}
-
-// no good ways to filter or aggregate data. https://scotthelme.co.uk/hacking-table-storage-like-queries/
-// we have to load all data and do own in-memory selection here on backend
+/**
+ * Function to load data in specified range from Azure Table storage.<br/>
+ * There are no good ways to filter or aggregate data. https://scotthelme.co.uk/hacking-table-storage-like-queries/.
+ * We have to load all data and do own in-memory selection here on backend.<br/>
+ *
+ * If day to load is not provided. Today is taken
+ */
 module.exports.getData = (req, res, hours, jumpByNFields, dayToLoad) => {
-    // this corresponds to 1 hour
-    let numberOfItems = 60 * hours;
-    let currentDate = new Date();
-    logger.debug("Today=" + currentDate);
-    // https://stackoverflow.com/questions/18624326/getmonth-in-javascript-gives-last-month
-    // get month starts from 0, so I have to add manualy +1 =]
-    let today = currentDate.getFullYear() + '-' + decimalToTwoDigits(currentDate.getMonth() + 1) + '-' + decimalToTwoDigits(currentDate.getDate());
-    logger.debug("Today=" + today);
+    let numberOfItems = constants.MEASUREMENTS_PER_HOUR * hours;
+
+    // today formatted to YYYY-MM-DD
+    let today = new Date().toISOString().split('T')[0];
     let finalDayToLoad = dayToLoad === undefined ? today : dayToLoad;
     logger.debug("Day to load=" + finalDayToLoad);
 
     let query = new azure.TableQuery().where('PartitionKey eq ?', finalDayToLoad);
     tableService.queryEntities('testTable2', query, null, (error, result, response) => {
-        arr = [];
+        let arr = [];
         if (!error) {
-            //logger.debug(JSON.stringify(result));
-            // probrat to a vzit kazdou 10.
             logger.info("Number of loaded items: " + result.entries.length);
-            //for( const entry of result.entries.values()){
             let len = result.entries.length;
+
             let startingIndex = numberOfItems > len ? 0 : len - numberOfItems;
             logger.debug("Starting index=" + startingIndex);
-            for (let i = startingIndex; i < len; i += jumpByNFields) {
+            for (let i = startingIndex; i < len; i += jumpByNFields)
                 arr.push(createRow(result.entries[i]));
-            }
+
             logger.info("Number of items in reduced set: " + arr.length);
-            //logger.debug(arr);
             res.send(arr);
-        }
+        } else
+            res.status(403).send('Azure tables query was not successful.');
     });
 };
 
+function getValueOrDefault(field, defaultValue) {
+    return field === undefined ? defaultValue : field._
+}
+
 function createRow(entry) {
     return {
-        "plcSaveTs": entry.plcSaveTs._,
-        "doorOpened": entry.doorClosed === undefined ? entry.doorOpened._ : !(entry.doorClosed._),
-        "electricSocket": entry.electricSocket._,
-        "temperature_outer": entry.temperature_outer._,
-        "temperature_inner": entry.temperature_inner._,
-        "humidity_inner": entry.humidity_inner._,
-        "light": entry.light._,
+        "plcSaveTs": getValueOrDefault(entry.plcSaveTs, null),
+        "doorOpened": entry.doorClosed === undefined ? getValueOrDefault(entry.doorOpened, null) : !(entry.doorClosed._),
+        "electricSocket": getValueOrDefault(entry.electricSocket, null),
+        "temperature_outer": getValueOrDefault(entry.temperature_outer, null),
+        "temperature_inner": getValueOrDefault(entry.temperature_inner, null),
+        "humidity_inner": getValueOrDefault(entry.humidity_inner, null),
+        "light": getValueOrDefault(entry.light, null),
     };
 }
 

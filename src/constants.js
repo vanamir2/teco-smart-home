@@ -22,6 +22,8 @@ module.exports = Object.freeze({
     TECOROUTE_PLC: process.env.TECOROUTE_PLC,
     TECOAPI_USERNAME: process.env.TECOAPI_USERNAME,
     TECOAPI_PW: process.env.TECOAPI_PW,
+    // NUMBERS
+    MEASUREMENTS_PER_HOUR: 60,
 
     // Google assistant error response
     GA_ERROR_RESPONSE :  {

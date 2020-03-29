@@ -203,7 +203,7 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
                 enabled: true
             },
             // https://canvasjs.com/docs/charts/chart-options/axisx/minimum/
-            minimum: minimum - 0.1,
+            minimum: MAX_INT === minimum ? null : minimum - 0.1,
             maximum: maximum === undefined ? null : maximum
         },
         toolTip: {

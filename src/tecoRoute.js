@@ -1,8 +1,9 @@
+process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const fetch = require('node-fetch'); // https://www.npmjs.com/package/node-fetch
 const logger = require('logplease').create('TecoRoute');
 const crypto = require('crypto'); // SHA1
 const sendToTecoApi = require("./tecoApi").sendToTecoApi;
-var constants = require('./constants');
+const constants = require('./constants');
 
 const TECOROUTE_LOGIN_TEMPLATE = "USER={0}&PASS={1}&PLC={2}";
 const TECOROUTE_URL = "http://route.tecomat.com:61682/TR_LOGIN.XML";

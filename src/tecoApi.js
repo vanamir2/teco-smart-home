@@ -1,5 +1,6 @@
+process.binding('http_parser').HTTPParser = require('http-parser-js').HTTPParser;
 const fetch = require('node-fetch');
-const logger = require('logplease').create('TecoApi');
+const logger = require('logplease').create('tecoApi');
 const md5 = require("md5");
 const constants = require('./constants');
 

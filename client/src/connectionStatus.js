@@ -4,7 +4,7 @@ import axios from "axios";
 const logger = require('logplease').create('ConnectionStatus');
 
 const INTERVAL_BETWEEN_STATUS_REFRESH = 5000;
-const TIMEOUT = 4500;
+const TIMEOUT = 6500;
 import {TECO_ROUTE_WITH_COOKIE_ENDPOINT} from "./GridItem";
 import {getPostRequestWithNewCommand} from "./utils";
 
