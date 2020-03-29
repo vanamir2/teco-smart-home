@@ -3,12 +3,14 @@ require("dotenv").config();
 // https://stackoverflow.com/questions/8595509/how-do-you-share-constants-in-nodejs-modules
 module.exports = Object.freeze({
     //SDSS
-    SDSS_ROOM_TEMPERATURE: 'releTemp_I_REA_NA_NA_Uk9PTTIK_VGVwbG9txJty',
-    SDSS_THERM_TEMPERATURE: 'tempTherm_O_INT_m50_100_Uk9PTTIK_VGVwbG90YSB0ZXJtb3N0YXQ',
-    SDSS_LEFT_LIGHT: 'light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_TGV2w6EgTEVE',
-    SDSS_THERM_STATE: 'thermState_O_BOO_0_1_Uk9PTTIK_VGVybW9zdGF0IE9OL09GRg',
-    SDSS_ELECTRIC_SOCKET: 'socket_O_BOO_0_1_T2LDvXZhY8OtIHBva29q_WsOhc3V2a2E',
-    SDSS_MAGNETIC_SWITCH: 'mgnSwitch_I_BOO_0_1_T2LDvXZhY8OtIHBva29q_RHZlxZllIHphdsWZZW55',
+    // ROOM 2
+    SDSS_ROOM_TEMPERATURE: 'ROOM_TcOtc3Rub3N0IDI.releTemp_I_REA_NA_NA_TcOtc3Rub3N0IDI_VGVtcGVyYXR1cmU',
+    SDSS_THERM_TEMPERATURE: 'ROOM_TcOtc3Rub3N0IDI.thermTemp_O_INT_m50_100_TcOtc3Rub3N0IDI_VGhlcm1vc3RhdCB0ZW1w',
+    SDSS_THERM_STATE: 'ROOM_TcOtc3Rub3N0IDI.thermState_O_BOO_0_1_TcOtc3Rub3N0IDI_VGhlcm1vc3RhdCBzdGF0ZQ',
+    // obyvaci pokoj
+    SDSS_LEFT_LIGHT: 'ROOM_T2LDvXZhY8OtIHBva29q.light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_TGVmdCBMRUQ',
+    SDSS_ELECTRIC_SOCKET: 'ROOM_T2LDvXZhY8OtIHBva29q.socket_O_BOO_0_1_T2LDvXZhY8OtIHBva29q_U29ja2V0',
+    SDSS_MAGNETIC_SWITCH: 'ROOM_T2LDvXZhY8OtIHBva29q.mgnSwitch_I_BOO_0_1_T2LDvXZhY8OtIHBva29q_RG9vciBvcGVuZWQ',
     // UTILS
     COOKIE_STRING: "RoutePLC={0};RouteLinkSave=;SoftPLC={1}",
     TECOROUTE_URL: "http://route.tecomat.com:61682/tecoapi/",

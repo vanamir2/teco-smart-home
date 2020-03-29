@@ -9,8 +9,9 @@ import {getPostRequestWithNewCommand} from "./utils";
 
 
 const logger = require('logplease').create('dataRefresher');
-export const INTERVAL_BETWEEN_STATUS_REFRESH = 3500;
+export const INTERVAL_BETWEEN_STATUS_REFRESH = 5000;
 const TIMEOUT = 6000;
+
 
 
 export class DataRefresher extends React.Component {
@@ -18,8 +19,10 @@ export class DataRefresher extends React.Component {
         lastDataRefresh: undefined
     };
 
+
     componentDidMount() {
         this.refreshData();
+
         this.interval = setInterval(() => {
             this.refreshData();
         }, INTERVAL_BETWEEN_STATUS_REFRESH);

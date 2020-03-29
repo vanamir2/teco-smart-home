@@ -13,7 +13,11 @@ if you want to find usage of dependencies. usage shown in the above link.
 projectfolder> depcheck
 
 #### [heroku environment variables](https://devcenter.heroku.com/articles/config-vars)
-add / remove env variable.
+add / remove env variable.<br/>
+heroku config:set LOGGER_LEVEL=INFO --app "teco-smart-home" 
+
+#### Heroku tail logs
+heroku logs --tail --app "teco-smart-home"
 
 ##### [Logger](https://github.com/haadcode/logplease) used in this project.
 

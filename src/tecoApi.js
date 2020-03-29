@@ -40,10 +40,10 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
         return fetch(targetUrl, {
             headers: {
                 'Authorization': authorizationTemplate,
+                'Content-Type': 'application/json',
                 Cookie: constants.COOKIE_STRING.format(routePLC, softPLC),
             }
-        }).then((res) => res.text())
-            .then((text) => text.length ? JSON.parse(text) : {})
+        }).then((res) => res !== undefined ? res.json() : {})
             .then(data => {
                 logger.debug('Data received from 2st TecoApi request.');
                 logger.debug(data);
