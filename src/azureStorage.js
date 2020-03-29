@@ -37,7 +37,7 @@ module.exports.getData = (req, res, hours, jumpByNFields, dayToLoad) => {
                 arr.push(createRow(result.entries[i]));
             }
             logger.info("Number of items in reduced set: " + arr.length);
-            //logger.debug(arr); // WORKING . HELL YEAH
+            //logger.debug(arr);
             res.send(arr);
         }
     });

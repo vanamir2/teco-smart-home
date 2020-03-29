@@ -17,10 +17,10 @@ const MAX_INT = 4294967295;
 const DATA_ENDPOINT = '/data';
 let graphDataTest = CanvasConstants.graphData_1day_10minutes;
 
-Date.prototype.toDateInputValue = (function() {
+Date.prototype.toDateInputValue = (function () {
     var local = new Date(this);
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-    return local.toJSON().slice(0,10);
+    return local.toJSON().slice(0, 10);
 });
 
 export class DiagramPage extends React.Component {
@@ -37,14 +37,14 @@ export class DiagramPage extends React.Component {
 
     handleSwitchChange() {
         let newState = !this.state.loadEntireDaySwitch;
-        logger.info("Load entire day switch was changed to: " +  newState);
+        logger.info("Load entire day switch was changed to: " + newState);
         this.loadData(newState, this.state.dayValue);
         this.setState({loadEntireDaySwitch: newState});
     }
 
-    handleDateSubmit(event){
+    handleDateSubmit(event) {
         event.preventDefault();
-        logger.info("Date was submitted: " +  this.state.dayValue);
+        logger.info("Date was submitted: " + this.state.dayValue);
         this.loadData(this.state.loadEntireDaySwitch, this.state.dayValue);
     }
 
@@ -54,7 +54,11 @@ export class DiagramPage extends React.Component {
 
         // load new data upon request
         const axiosWithTimeout = axios.create({timeout: REQUEST_TIMEOUT,});
-        axiosWithTimeout.post(DATA_ENDPOINT, {"hours": hours, "jumpByNFields": jumpByNFields, "day": dayToLoad}).then((response) => {
+        axiosWithTimeout.post(DATA_ENDPOINT, {
+            "hours": hours,
+            "jumpByNFields": jumpByNFields,
+            "day": dayToLoad
+        }).then((response) => {
             if (response.data.error !== undefined) {
                 alert('Request to read data failed. Error: ' + JSON.stringify(response.data.error));
                 return;
@@ -83,10 +87,13 @@ export class DiagramPage extends React.Component {
                         <img className="center" height="30" width="30" src="refresh.png" alt="Logo" title="Refresh"/>
                     </div>
                 </a>
-                <ComponentUtils.MaterialSwitch customClass={"login-form-withoutNewLineAndWidth"}  name={"Load entire day"} checked={this.state.loadEntireDaySwitch} handleChange={this.handleSwitchChange}/>
+                <ComponentUtils.MaterialSwitch customClass={"login-form-withoutNewLineAndWidth"}
+                                               name={"Load entire day"} checked={this.state.loadEntireDaySwitch}
+                                               handleChange={this.handleSwitchChange}/>
                 <form onSubmit={this.handleDateSubmit}>
                     <label className="login-form-withoutNewLineTop" htmlFor="fname">Date&nbsp;</label>
-                    <input type="date" id="fname" name="fname" value={this.state.dayValue} onChange={event => this.setState({dayValue: event.target.value})}/>
+                    <input type="date" id="fname" name="fname" value={this.state.dayValue}
+                           onChange={event => this.setState({dayValue: event.target.value})}/>
                     <input type="submit" value="Submit"/><br/>
                 </form>
                 <TemperatureDiagram graphData={this.state.graphData} name={"Temperature"}/>
@@ -119,7 +126,7 @@ export class HumidityDiagram extends React.Component {
 export class BooleanDiagram extends React.Component {
     render() {
         let yAxisName = "True/False";
-        let yAxisAllFields = ["doorOpened",  "electricSocket" ];
+        let yAxisAllFields = ["doorOpened", "electricSocket"];
         let yAxisAllNames = ["Door opened", "Socket on"];
         return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames, this.props.maxValue);
     }
@@ -139,16 +146,20 @@ export function createAllDiagrams() {
     return <DiagramPage/>;
 }
 
-// also changes hour to -1 corresponding to GTM+1
-export function parseISOStringToDate(s) {
-    var b = s.split(/\D+/);
-    return new Date(Date.UTC(b[0], --b[1], b[2], --b[3], b[4], b[5], b[6]));
+// https://en.wikipedia.org/wiki/ISO_8601
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+const TIMEZONE_CORRECTION = '+0200';
+
+// TECO saves +0200 timezone as UTC (+0) timezone. This method repair timezone.
+export function parseISOStringToDate(isoDate) {
+    let isoDateWithoutTimezone = isoDate.substring(0, isoDate.length - 1);
+    return new Date(isoDateWithoutTimezone + TIMEZONE_CORRECTION);
 }
 
-function getValue(value){
-    if( value === true)
+function getValue(value) {
+    if (value === true)
         return 1;
-    else if(value === false)
+    else if (value === false)
         return 0;
     return value;
 }
@@ -161,10 +172,16 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
         let innerDataArr = [];
         for (let field of graphData) {
             minimum = minimum > field[yAxis] ? minimum = field[yAxis] : minimum;
-            innerDataArr.push({x: parseISOStringToDate(field.plcSaveTs), y: getValue(field[yAxis]) });
+            innerDataArr.push(
+                {
+                    x: parseISOStringToDate(field.plcSaveTs),
+                    y: getValue(field[yAxis])
+                }
+            );
         }
         dataArr.push(innerDataArr);
     }
+    console.log(JSON.stringify(dataArr));
 
     const options = {
         animationEnabled: true,
@@ -219,7 +236,7 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
             lineDashType: "dash",
             color: "#737df0",
             dataPoints: dataArr[2]
-    }]
+        }]
 
     };
 
