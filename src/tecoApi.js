@@ -33,7 +33,7 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
     fetch(targetUrl, {headers: {Cookie: constants.COOKIE_STRING.format(routePLC, softPLC)},}).then(data => {
         if (hasLoginError(data, res)) return;
         logger.debug('Data received from 1st TecoApi request. Its status is: ' + data.status);
-        logger.debug(data);
+        // logger.debug(data);
         const authorizationTemplate = getAuthorizationTemplate(data.headers, targetUrl, username, password);
         logger.debug('---- Sending 2nd request to TecoApi');
         return fetch(targetUrl, {

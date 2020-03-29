@@ -57,7 +57,7 @@ function createRow(entry) {
 
 // testing query
 module.exports.test = (req, res) => {
-    let query = new azure.TableQuery().top(5);
+    let query = new azure.TableQuery().top(5).where('PartitionKey eq ?', "2020-03-29");
     tableService.queryEntities('testTable2', query, null, (error, result, response) => {
         if (error)
             res.send(error);

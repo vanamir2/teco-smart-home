@@ -6,7 +6,7 @@ API blueprint describing teco-smart-home backend of master thesis.<br/>
 <a href="https://github.com/vanamir2/teco-smart-home">Github repository</a>.
 
 ## TecoRoute Login [/tecoRouteLogin]
-Those login values are same as the one used on official site for
+TecoRoute login values are same as the one used on official site for
 <a href="http://route.tecomat.com:61682/TR_LOGIN.XML">TecoRoute login</a>.
 You have to own active account registered on
 <a href="https://portal.tecomat.com/">TecoRoute service</a>. Otherwise you have to use localhost connection.
@@ -131,7 +131,7 @@ TecoApi requests through TecoRoute **without** login cookie.<br/>New login to Te
 
         {
             "tecoRouteUsername": "john.wick",
-            "tecoRoutePw": "secret",
+            "tecoRoutePw": "nremSleepIsTheKey",
             "plcName": "myCoolPlc"
             "username": "admin",
             "password": "veryStronKpw",
@@ -149,3 +149,91 @@ TecoApi requests through TecoRoute **without** login cookie.<br/>New login to Te
 + Response 500 (text/plain)
 
         Specific error message.  
+        
+        
+# group Google assistant     
+Teco smart home API supports Google assistant requests. Dialogflow app sends requests to this endpoint.<br/>
+There is no interactive login process. 
+
+Credentials must be filled as server environment variables. For example:
+ - TECOROUTE_PW="nremSleepIsTheKey"
+ - TECOROUTE_USERNAME="john.wick"
+ - TECOROUTE_PLC="myCoolPlc"
+ - TECOAPI_USERNAME="admin"
+ - TECOAPI_PW="veryStronKpw"
+ 
+Google assistant internally uses TecoApi requests without cookie.<br/>
+**This endpoint is not universal. There is a close link between endpoint implementation and Dialogflow app.**
+ 
+## Dialogflow webhook [/webhook]
+Webhook (endpoint) to handle dialogflow (Google Assistant) requests.<br/>
+It is implemented to fulfill <a href="https://cloud.google.com/dialogflow/docs/fulfillment-webhook">Dialogflow specification</a>.
+
+### webhook [POST]
+
++ Attributes
+    + queryResult.action: lightOn (string, required) - id of an action
+    + queryResult.parameters.number: 10 (number) - number spoken by user
+    
+
++ Request (text/plain)
+
+        See Dialogflow specification: https://cloud.google.com/dialogflow/docs/fulfillment-webhook
+
++ Response 200 (text/plain)
+
+        See Dialogflow specification: https://cloud.google.com/dialogflow/docs/fulfillment-webhook
+
+
+# group Azure Table storage
+Smart home central unit sends data periodicly (every 60 seconds) to Azure Table storage.<br/>
+
+
+Credentials also must be filled as server environment variable. For example:
+ - AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=$1;AccountKey=$2;EndpointSuffix=core.windows.net"
+ 
+Where $1 and $2 are obtained from your Azure Storage account.
+ 
+## data request [/data]
+This endpoint returns selected data from Azure Tables.
+
+### data [POST]
+
++ Attributes
+    + hours: 24 (number, required) - Defines how many hours backwards it can go from the latest measurement of a given day.
+    + jumpByNFields: 4 (number, required) - To select every n-th data field. For example to change data densitity to 10 minutes instead of 1 minute.
+    + day: `2020-03-29` (string, required) - YYYY-MM-DD date format
+    
+
++ Request (application/json)
+
+        {
+            "hours": "24",
+            "jumpByNFields": "4",
+            "day": "2020-03-29"
+
+        }
+
++ Response 200 (application/json)
+
+        [
+           {
+              "plcSaveTs":"2020-03-29T11:12:30.003Z",
+              "doorOpened":true,
+              "electricSocket":false,
+              "temperature_outer":20.58,
+              "temperature_inner":19.6,
+              "humidity_inner":47,
+              "light":0
+           },
+           {
+              "plcSaveTs":"2020-03-29T11:16:30.006Z",
+              "doorOpened":true,
+              "electricSocket":false,
+              "temperature_outer":20.690001,
+              "temperature_inner":19.799999,
+              "humidity_inner":47,
+              "light":0
+           },
+        ]
+

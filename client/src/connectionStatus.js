@@ -3,10 +3,13 @@ import axios from "axios";
 
 const logger = require('logplease').create('ConnectionStatus');
 
-const STATUS_ENDPOINT_TECO = 'status';
 const INTERVAL_BETWEEN_STATUS_REFRESH = 5000;
 const TIMEOUT = 4500;
-const STATUS_ENDPOINT_BACKEND = '/statusOfConnection';
+import {TECO_ROUTE_WITH_COOKIE_ENDPOINT} from "./GridItem";
+import {getPostRequestWithNewCommand} from "./utils";
+
+const TECOAPI_STATUS = 'status';
+import * as Constants from "./constants";
 
 export class ConnectionStatusCheck extends React.Component {
     state = {
@@ -25,7 +28,8 @@ export class ConnectionStatusCheck extends React.Component {
         let state = false;
         const axiosWithTimeout = axios.create({timeout: TIMEOUT,});
         // http://route.tecomat.com:61682/PAGE1.XML
-        axiosWithTimeout.post(STATUS_ENDPOINT_BACKEND, this.props.postRequestData).then((response) => {
+        let requestData = getPostRequestWithNewCommand(this.props.postRequestData, Constants.COMMAND_GET_OBJECT + TECOAPI_STATUS);
+        axiosWithTimeout.post(TECO_ROUTE_WITH_COOKIE_ENDPOINT, requestData).then((response) => {
             logger.info(response.data);
             if (response.data[Object.keys(response.data)] === true)
                 state = true;
@@ -38,7 +42,7 @@ export class ConnectionStatusCheck extends React.Component {
     }
 
     render() {
-        if( this.state.isConnectionOK === undefined)
+        if (this.state.isConnectionOK === undefined)
             return <div/>;
 
         let text = this.state.isConnectionOK === true ? 'ONLINE' : 'OFFLINE';

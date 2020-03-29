@@ -47,7 +47,9 @@ router.post('/tecoApiViaTecoRoute', (req, res) => {
     TecoRoute.sendToTecoApiViaTecoRoute(res, url, req.body.tecoRouteUsername, req.body.tecoRoutePw, req.body.plcName, req.body.username, req.body.password);
 });
 
-// Dialogflow webhook to use Google Assistant.
+/** Dialogflow webhook to use Google Assistant.<br/>
+ * See apiary documentation for more info: {@link https://tecosmarthome.docs.apiary.io/}.
+ * */
 router.post('/webhook', (req, res) => {
     GoogleAssistant.handleWebHook(req, res);
 });
@@ -65,19 +67,7 @@ router.post('/data', (req, res) => {
     AzureStorage.getData(req, res, hours, jumpByNFields, dayToLoad);
 });
 
-// get status of connection
-// TODO - do dokumentace napsat, ze je predpoklad promenna :status na strane PLC
-router.post('/statusOfConnection', (req, res) => {
-    // localhost connection returns false - it is OFFLINE by default
-    if (req.body.ipAddress !== undefined) {
-        res.send(false);
-        return;
-    }
-    const url = constants.TECOROUTE_URL + constants.COMMAND_GET_OBJECT + constants.TECOAPI_STATUS;
-    TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null, req.body.routePLC, req.body.softPLC);
-});
-
-// ------------------------------------------------------------------------------- DEVELOPER ENDPOINTS
+// ------------------------------------------------------------------------------------------------- DEVELOPER ENDPOINTS
 if (process.env.NODE_ENV !== 'production') {
     /** Performs localhost TecoApi request based on username, pw, ipAddress and command.<br/>
      * See apiary documentation for more info: {@link https://tecosmarthome.docs.apiary.io/}.
@@ -89,23 +79,23 @@ if (process.env.NODE_ENV !== 'production') {
         TecoApi.sendToTecoApi(url, req.body.username, req.body.password, res, null);
     });
 
+    // ------------------------------------------------------------------------------- TESTING ENDPOINTS
+    // Load list of SDSS.
+    router.get('/test', (req, res) => {
+        let url = constants.TECOROUTE_URL + constants.COMMAND_GET_LIST;
+        TecoRoute.sendToTecoApiViaTecoRoute(res, url, TECOROUTE_USERNAME, TECOROUTE_PW, TECOROUTE_PLC, TECOAPI_USERNAME, TECOAPI_PW, null);
+    });
+
+    // Performs login to testing account.
+    router.get('/tecoRouteLoginTest', (req, res) => TecoRoute.tecoRouteLogin(res, TECOROUTE_USERNAME, TECOROUTE_PW, TECOROUTE_PLC));
+
+    // Testing data download from Azure
+    router.get('/data', (req, res) => AzureStorage.test(req, res));
 }
-// ------------------------------------------------------------------------------- TESTING ENDPOINTS
+
 /* GET home page. */
 router.get('/express', function (req, res) {
     res.send('Answer from Express server.')
 });
-
-// Load list of SDSS.
-router.get('/test', (req, res) => {
-    let url = constants.TECOROUTE_URL + constants.COMMAND_GET_LIST;
-    TecoRoute.sendToTecoApiViaTecoRoute(res, url, TECOROUTE_USERNAME, TECOROUTE_PW, TECOROUTE_PLC, TECOAPI_USERNAME, TECOAPI_PW, null);
-});
-
-// Performs login to testing account.
-router.get('/tecoRouteLoginTest', (req, res) => TecoRoute.tecoRouteLogin(res, TECOROUTE_USERNAME, TECOROUTE_PW, TECOROUTE_PLC));
-
-// Testing data download from Azure
-router.get('/data', (req, res) => AzureStorage.test(req, res));
 
 module.exports = router;

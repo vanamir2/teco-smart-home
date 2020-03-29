@@ -4,6 +4,9 @@ import React from 'react';
 import axios from "axios";
 import {TECO_API_ENDPOINT, TECO_ROUTE_WITH_COOKIE_ENDPOINT, ROOM_PREFIX} from "./GridItem";
 import {createSDSStoValueMap} from "./DataSourceUtils";
+import * as Constants from "./constants";
+import {getPostRequestWithNewCommand} from "./utils";
+
 
 const logger = require('logplease').create('dataRefresher');
 export const INTERVAL_BETWEEN_STATUS_REFRESH = 3000;
@@ -24,11 +27,9 @@ export class DataRefresher extends React.Component {
 
     refreshData() {
         logger.debug('Connection status check is refreshing.');
-        let requestData = JSON.parse(JSON.stringify(this.props.postRequestData));
         let roomWithPrefix = ROOM_PREFIX + this.props.selectedRoomEncoded;
-        requestData['command'] = 'GetObject?' + roomWithPrefix;
+        let requestData = getPostRequestWithNewCommand(this.props.postRequestData, Constants.COMMAND_GET_OBJECT + roomWithPrefix);
         logger.debug(requestData);
-
         let ENDPOINT = requestData.ipAddress !== undefined ? TECO_API_ENDPOINT : TECO_ROUTE_WITH_COOKIE_ENDPOINT;
 
         const axiosWithTimeout = axios.create({timeout: TIMEOUT,});

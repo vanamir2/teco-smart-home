@@ -59,10 +59,10 @@ module.exports.handleWebHook = (req, res) => {
             break;
     }
 
-    // send response
+    // sends TecoApi request
     if (doOnSuccess !== null)
         sendPredefinedRequst(res, url, doOnSuccess);
-    else
+    else // sends response
         res.send(createTextResponse("Action " + action + " is not implemented."));
 };
 
