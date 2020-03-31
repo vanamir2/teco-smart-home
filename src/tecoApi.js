@@ -65,8 +65,10 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
                 }
                 if (doOnSuccess === null || doOnSuccess === undefined)
                     res.send(data);
-                else
-                    doOnSuccess(utils.getValueFromJson(utils.getValueFromJson(data)));
+                else {
+                    value = utils.getValueFromJson(data) === undefined ? null : utils.getValueFromJson(utils.getValueFromJson(data))
+                    doOnSuccess(value);
+                }
             })
     }).catch(e => {
         logger.error(e);
