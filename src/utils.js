@@ -5,3 +5,8 @@ module.exports.decimalToTwoDigits = function decimalToTwoDigits(number) {
 
 // comment
 //module.exports.functionName =
+
+// comment
+module.exports.getValueFromJson = function getValueFromJson(json) {
+    return Object.values(json)[0];
+};

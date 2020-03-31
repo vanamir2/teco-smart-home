@@ -3,6 +3,7 @@ const fetch = require('node-fetch');
 const logger = require('logplease').create('tecoApi');
 const md5 = require("md5");
 const constants = require('./constants');
+const utils = require('./utils');
 
 const CNONCE_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const TECOAPI_REALM = "TecoApi";
@@ -65,7 +66,7 @@ module.exports.sendToTecoApi = function sendToTecoApi(targetUrl, username, passw
                 if (doOnSuccess === null || doOnSuccess === undefined)
                     res.send(data);
                 else
-                    doOnSuccess(Object.values(data)[0]);
+                    doOnSuccess(utils.getValueFromJson(utils.getValueFromJson(data)));
             })
     }).catch(e => {
         logger.error(e);
