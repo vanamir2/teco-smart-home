@@ -11,6 +11,7 @@ import {ConnectionStatusCheck} from './connectionStatus';
 import {DataRefresher} from './dataRefresher';
 import {Loader} from './loader';
 import * as Utils from './utils';
+import * as Constant from './constants';
 
 const Logger = require('logplease');
 const logger = Logger.create('index');
@@ -248,7 +249,8 @@ class Main extends React.Component {
             <div>
                 <a href={"/#"} className="active_chat" onClick={this.negateDiagramState}>
                     <div className="leftColumn">
-                        <img className="center" height="30" width="30" src="return-button.svg" alt="Back button" title="Back"/>
+                        <img className="center" height="30" width="30" src="return-button.svg" alt="Back button"
+                             title="Back"/>
                     </div>
                 </a>
                 <DiagramPage/>
@@ -256,6 +258,24 @@ class Main extends React.Component {
                     postRequestData={this.state.postRequestData}
                 />
             </div>);
+    }
+
+    getUnitByItemType(itemType) {
+        if (itemType === Constant.ITEM_TYPE_TEMP)
+            return '°C';
+        else if (itemType === Constant.ITEM_TYPE_HUMID)
+            return '%';
+        return '';
+    }
+
+    roundFloatValues(val) {
+        if (this.isFloat(val))
+            return val.toFixed(2);
+        return val;
+    }
+
+    isFloat(n) {
+        return Number(n) === n && n % 1 !== 0;
     }
 
     render() {
@@ -280,10 +300,16 @@ class Main extends React.Component {
                 let sds = arrayOfSDS[i];
                 roomEncoded = sds.roomBase64;
 
-                const itemType = sds.categoryId;
-                const inOut = sds.inOut;
-                const dataSourceString = sds.dataSourceString;
-                const name = sds.name;
+                let itemType = sds.categoryId;
+                let inOut = sds.inOut;
+                let dataSourceString = sds.dataSourceString;
+                let name = sds.name;
+                let value = this.roundFloatValues(this.state.SDSSfreshDataMap.get(dataSourceString));
+                let maxValue = sds.maxValue;
+                let minValue = sds.minValue;
+
+                let unit = this.getUnitByItemType(itemType);
+
                 /*   logger.debug('SDSS=' + sds.dataSourceString);
                    logger.debug('CategoryId=' + sds.categoryId);
                    logger.debug('DataType=' + sds.dataType);
@@ -296,7 +322,8 @@ class Main extends React.Component {
                             id={dataSourceString}
                             postRequestData={this.state.postRequestData}
                             name={name}
-                            newValue={this.state.SDSSfreshDataMap.get(dataSourceString)}
+                            newValue={value}
+                            unit={unit}
                         />);
                 else if (itemType === THERMOSTAT_TEMP) {
                     roomElements.push(
@@ -305,7 +332,9 @@ class Main extends React.Component {
                                                   key={dataSourceString}
                                                   postRequestData={this.state.postRequestData}
                                                   name={name}
-                                                  newValue={this.state.SDSSfreshDataMap.get(dataSourceString)}
+                                                  newValue={value}
+                                                  maxValue={maxValue}
+                                                  minValue={minValue}
                         />);
                 } else if (sds.dataType === DataSourceUtils.BOOLEAN_DATA_TYPE) {
                     roomElements.push(
@@ -314,7 +343,7 @@ class Main extends React.Component {
                                                   key={dataSourceString}
                                                   postRequestData={this.state.postRequestData}
                                                   name={name}
-                                                  newValue={this.state.SDSSfreshDataMap.get(dataSourceString)}
+                                                  newValue={value}
                         />);
                 } else if (itemType === DataSourceUtils.RED_LIGHT) {
                     roomElements.push(
@@ -323,7 +352,7 @@ class Main extends React.Component {
                                            key={dataSourceString}
                                            postRequestData={this.state.postRequestData}
                                            name={name}
-                                           newValue={this.state.SDSSfreshDataMap.get(dataSourceString)}
+                                           newValue={value}
                         />)
                 } else roomElements.push(
                     <GridItem.Light className="grid-item"
@@ -331,7 +360,7 @@ class Main extends React.Component {
                                     key={dataSourceString}
                                     postRequestData={this.state.postRequestData}
                                     name={name}
-                                    newValue={this.state.SDSSfreshDataMap.get(dataSourceString)}
+                                    newValue={value}
                     />);
             }
 
@@ -341,7 +370,8 @@ class Main extends React.Component {
                     <div>
                         <a href={"/#"} className="active_chat" onClick={() => this.unselectRoom()}>
                             <div className="leftColumn">
-                                <img className="center" height="42" width="42" src="return-button.svg" alt="Logo" title="Back"/>
+                                <img className="center" height="42" width="42" src="return-button.svg" alt="Logo"
+                                     title="Back"/>
                             </div>
                         </a>
                         <div className="rightColumn">

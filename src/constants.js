@@ -4,8 +4,8 @@ require("dotenv").config();
 module.exports = Object.freeze({
     //SDSS
     // ROOM 2
-    SDSS_ROOM_TEMPERATURE: 'ROOM_TcOtc3Rub3N0IDI.releTemp_I_REA_NA_NA_TcOtc3Rub3N0IDI_VGVtcGVyYXR1cmU',
-    SDSS_THERM_TEMPERATURE: 'ROOM_TcOtc3Rub3N0IDI.thermTemp_O_INT_m50_100_TcOtc3Rub3N0IDI_VGhlcm1vc3RhdCB0ZW1w',
+    SDSS_ROOM_TEMPERATURE: 'ROOM_TcOtc3Rub3N0IDI.temp_I_REA_NA_NA_TcOtc3Rub3N0IDI_VGVtcGVyYXR1cmU',
+    SDSS_THERM_TEMPERATURE: 'ROOM_TcOtc3Rub3N0IDI.thermTemp_O_INT_m5_40_TcOtc3Rub3N0IDI_VGhlcm1vc3RhdCB0ZW1w',
     SDSS_THERM_STATE: 'ROOM_TcOtc3Rub3N0IDI.thermState_O_BOO_0_1_TcOtc3Rub3N0IDI_VGhlcm1vc3RhdCBzdGF0ZQ',
     // obyvaci pokoj
     SDSS_LEFT_LIGHT: 'ROOM_T2LDvXZhY8OtIHBva29q.light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_TGVmdCBMRUQ',

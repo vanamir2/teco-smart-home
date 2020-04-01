@@ -1,6 +1,6 @@
-
 // Base64; UTF-8; https://www.npmjs.com/package/js-base64
 const Base64 = require('js-base64').Base64;
+
 // same output as https://www.base64decode.org/
 
 /**
@@ -28,11 +28,11 @@ export class SimpleDataSource {
     }
 
     get minValue() {
-        return this.getValueOrDefault(this._minValue, "");
+        return this.getValueOrDefault(this.convertCharMToMinus(this._minValue), "");
     }
 
     get maxValue() {
-        return this.getValueOrDefault(this._maxValue, "");
+        return this.getValueOrDefault(this.convertCharMToMinus(this._maxValue), "");
     }
 
     get roomBase64() {
@@ -51,6 +51,12 @@ export class SimpleDataSource {
         return this.decodeValueOrDefault(this._name, "");
     }
 
+    convertCharMToMinus(value) {
+        if (value.startsWith('m'))
+            return -parseInt(value.substr(1));
+        return value;
+    }
+
     getValueOrDefault(value, defaultVal) {
         return (value === undefined || value === "") ? defaultVal : value;
     }
@@ -67,8 +73,8 @@ export class SimpleDataSource {
 
         this._categoryId = getPartOfSimpleDSSWithValueCheck(dataSourceString, 0, "categoryId");
         this._inOut = getPartOfSimpleDSSWithValueCheck(dataSourceString, 1, "I/O definition");
-        if(this._inOut !== "O" && this._inOut !== "I")
-            throw new Error(ERROR_STRING +  "value \"I\" or \"O\". Received I/O is: " + this._inOut);
+        if (this._inOut !== "O" && this._inOut !== "I")
+            throw new Error(ERROR_STRING + "value \"I\" or \"O\". Received I/O is: " + this._inOut);
         this._dataType = getPartOfSimpleDSSWithValueCheck(dataSourceString, 2, "data type");
 
         this._minValue = getPartOfSimpleDSS(dataSourceString, 3);
@@ -86,9 +92,10 @@ function getPartOfSimpleDSS(string, part) {
 }
 
 const ERROR_STRING = "Simple data source string does not contain ";
+
 function getPartOfSimpleDSSWithValueCheck(string, part, doesNotContain) {
     let partOfString = string.split("_")[part];
-    if (partOfString === undefined || partOfString === "" )
+    if (partOfString === undefined || partOfString === "")
         throw new Error(ERROR_STRING + doesNotContain + ". Received string is: " + string);
     return partOfString;
 }

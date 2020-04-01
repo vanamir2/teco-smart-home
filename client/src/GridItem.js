@@ -119,7 +119,7 @@ export class Light extends React.Component {
                 //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
             }}>
                 <div>
-                    {this.state.name}{' - ' + this.state.value}
+                    {this.state.name}{' = ' + this.state.value + ' %'}
                 </div>
             </a>
         );
@@ -185,7 +185,7 @@ export class ReadOnly extends React.Component {
         // the 1st tag is to make it click-able
         return (
             <div className="grid-item">
-                {this.state.name}{' - ' + this.state.value}
+                {this.state.name}{' = ' + this.state.value + ' ' + this.props.unit}
             </div>
         );
     }
@@ -244,7 +244,7 @@ export class ThermostatValue extends React.Component {
                     //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
                 }}>
                     <div>
-                        {this.state.name}{' - ' + this.state.value + ' °C'}
+                        {this.state.name}{' = ' + this.state.value + ' °C'}
                     </div>
                 </a>
             );
@@ -252,8 +252,8 @@ export class ThermostatValue extends React.Component {
             innerSpace.push(
                 <div key={"SUB"} className="set-value-item-form">
                     <form className="set-value-item-form" onSubmit={this.handleSubmit}>
-                        <input className="set-value-item-text" type="text" value={this.state.valueToSet}
-                               onChange={this.handleChange}
+                        <input className="set-value-item-text" type="number" value={this.state.valueToSet}
+                               min={this.props.minValue} max={this.props.maxValue} step={1} onChange={this.handleChange}
                                name="valueToSet" placeholder="Value (°C)" required/>
                         <input className="set-value-item-btn" type="submit" value="Set"/>
                         <button onClick={() => this.changeState()} type="button"
@@ -309,7 +309,7 @@ export class BooleanGridItem extends React.Component {
                 //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
             }}>
                 <div>
-                    {this.state.name}{' - ' + this.state.value}
+                    {this.state.name}{' = ' + this.state.value}
                 </div>
             </a>
         );
