@@ -12,6 +12,7 @@ import {DataRefresher} from './dataRefresher';
 import {Loader} from './loader';
 import * as Utils from './utils';
 import * as Constant from './constants';
+import Button from "react-bootstrap/Button";
 
 const Logger = require('logplease');
 const logger = Logger.create('index');
@@ -204,6 +205,7 @@ class Main extends React.Component {
 
         return (
             <div className="login-form">
+
                 <h1>Teco connection</h1>
                 {localHostSwitch}
                 {loginForm}
@@ -213,29 +215,24 @@ class Main extends React.Component {
 
     createRoomGrid() {
         let gridElements = [];
-        if (this.state.roomToSDSmap === undefined)
-            return <Loader/>;
-        for (const [key] of this.state.roomToSDSmap.entries())
-            gridElements.push(<GridItem.Room className="grid-item"
-                                             key={key} name={key}
-                                             onClick={this.selectRoom.bind(this, key)}/>);
+          if (this.state.roomToSDSmap === undefined)
+              return <Loader/>;
+          for (const [key] of this.state.roomToSDSmap.entries())
+              gridElements.push(<GridItem.Room className="grid-item"
+                                               key={key} name={key}
+                                               onClick={this.selectRoom.bind(this, key)}/>);
         return (
             <div>
                 <div className="grid-container">
                     {gridElements}
                 </div>
                 <div className="login-form">
-                    <form onSubmit={this.handleSubmit}>
-                        <input type="submit" value="Refresh"/>
-                    </form>
-                    <br/>
-                    <form onSubmit={this.negateDiagramState}>
-                        <input type="submit" value="Diagrams"/>
-                    </form>
-                    <GridItem.ActionButton
-                        // force page refresh
-                        onClick={() => window.location.reload(false)}
-                        text={'Logout'}/>
+                    <Button variant="dark"
+                            onClick={this.negateDiagramState}> Diagrams </Button>
+                    <Button variant="outline-secondary"
+                            onClick={this.handleSubmit}> Refresh </Button>
+                    <Button variant="outline-secondary"
+                            onClick={() => window.location.reload(false)}> Logout </Button>
                 </div>
                 <ConnectionStatusCheck
                     postRequestData={this.state.postRequestData}
@@ -249,11 +246,13 @@ class Main extends React.Component {
             <div>
                 <a href={"/#"} className="active_chat" onClick={this.negateDiagramState}>
                     <div className="leftColumn">
-                        <img className="center" height="30" width="30" src="return-button.svg" alt="Back button"
+                        <img className="center" height="35" width="35" src="return-button.svg" alt="Back button"
                              title="Back"/>
                     </div>
                 </a>
+                <p/>
                 <DiagramPage/>
+
                 <ConnectionStatusCheck
                     postRequestData={this.state.postRequestData}
                 />
@@ -279,6 +278,7 @@ class Main extends React.Component {
     }
 
     render() {
+        //return this.createRoomGrid();
         // <div className="loader"/>
         if (this.state.wasLoginSubmitted)
             return <Loader/>;

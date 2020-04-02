@@ -12,5 +12,8 @@ ngrok http --host-header=rewrite {port}
  TimeZone correction:<br/>
  https://en.wikipedia.org/wiki/ISO_8601 <br/>
  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+ 
+ React & Bootstrap:<br/>
+ https://react-bootstrap.github.io/getting-started/introduction/
 
 

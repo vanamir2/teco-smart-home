@@ -7,7 +7,9 @@ export const TECO_API_ENDPOINT = '/TecoApi';
 export const TECO_ROUTE_WITH_COOKIE_ENDPOINT = '/TecoApiViaTecoRouteWithCookie';
 export const REQUEST_TIMEOUT = 7000;
 import {INTERVAL_BETWEEN_STATUS_REFRESH} from './dataRefresher'
+
 export const ROOM_PREFIX = 'ROOM_';
+import {LoaderSmaller} from './loader';
 
 const logger = require('logplease').create('GridItem');
 
@@ -50,12 +52,12 @@ export class Room extends React.Component {
 }
 
 // http://route.tecomat.com:61682/TecoApi/GetObject?ROOM_T2LDvXZhY8OtIHBva29q.light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_TGV2w6EgTEVE
-function getRoomPrefixSelectorFromSDSS(sdss){
+function getRoomPrefixSelectorFromSDSS(sdss) {
     return ROOM_PREFIX + new SimpleDataSource(sdss).roomBase64 + '.'
 }
 
 // TODO - refactor to tecoApi.js
-function setValueToTecoApi(postRequestData, itemId, valueToSet, onSucces) {
+function setValueToTecoApi(postRequestData, itemId, valueToSet, onSucces, onFail) {
     const axiosWithTimeout = axios.create({timeout: REQUEST_TIMEOUT});
 
     // deep copy of postRequestData
@@ -71,6 +73,7 @@ function setValueToTecoApi(postRequestData, itemId, valueToSet, onSucces) {
         }
         onSucces(valueToSet);
     }).catch((error) => {
+        onFail();
         if (error.response) {
             alert(error.response.data);
             console.log(error.response.data);
@@ -89,21 +92,29 @@ export class Light extends React.Component {
             onClick: props.onClick,
             value: "",
             lastUserCall: 0,
+            isLoading: false
         };
         this.setValueAfterSuccessfulCall = this.setValueAfterSuccessfulCall.bind(this);
+        this.setLoadingOff = this.setLoadingOff.bind(this);
     }
 
     setValueAfterSuccessfulCall(valueToSet) {
         this.setState({
+            isLoading: false,
             value: valueToSet,
             lastUserCall: getCurrentTimeInMs(),
         })
     }
 
+    setLoadingOff(){
+        this.setState({isLoading: false});
+    }
+
     // set value
     switchOnOff() {
         const valueToSet = this.state.value > 0 ? 0 : 100;
-        setValueToTecoApi(this.props.postRequestData, this.props.id, valueToSet, this.setValueAfterSuccessfulCall)
+        this.setState({isLoading: true});
+        setValueToTecoApi(this.props.postRequestData, this.props.id, valueToSet, this.setValueAfterSuccessfulCall, this.setLoadingOff)
     }
 
     // TODO - toto je stejne jako gridItem BooleanGridItem
@@ -112,6 +123,7 @@ export class Light extends React.Component {
         let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
             this.setState({value: this.props.newValue});
+        let innerItem  = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' %' : <LoaderSmaller/>;
         // the 1st tag is to make it click-able
         return (
             <a href={"/#"} className="grid-item" onClick={() => {
@@ -119,7 +131,7 @@ export class Light extends React.Component {
                 //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
             }}>
                 <div>
-                    {this.state.name}{' = ' + this.state.value + ' %'}
+                    {innerItem}
                 </div>
             </a>
         );
@@ -141,12 +153,13 @@ export class RedLight extends Light {
             src = "redLightOn.png";
             fontColor = "red-font";
         }
+        let innerItem  = this.state.isLoading === false ? this.state.name + ' ' : <LoaderSmaller/>;
 
         return (
             <div className="grid-item">
                 <a href={"/#"} onClick={() => this.switchOnOff()}>
                     <div className={"leftColumnBigger"}>
-                        <div className={fontColor}>{this.state.name + ' '}</div>
+                        <div className={fontColor}>{innerItem}</div>
                     </div>
                     <div className="rightColumn2">
                         <img className="margin" height="32" width="32" src={src} alt="Logo"/>
@@ -191,7 +204,6 @@ export class ReadOnly extends React.Component {
     }
 }
 
-
 export class ThermostatValue extends React.Component {
     constructor(props) {
         super(props);
@@ -202,6 +214,7 @@ export class ThermostatValue extends React.Component {
             isStateSetValue: false,
             valueToSet: "",
             lastUserCall: 0,
+            isLoading: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.changeState = this.changeState.bind(this);
@@ -218,8 +231,13 @@ export class ThermostatValue extends React.Component {
         this.setState({[event.target.name]: event.target.value});
     }
 
+    setLoadingOff(){
+        this.setState({isLoading: false});
+    }
+
     setValueAfterSuccessfulCall(valueToSet) {
         this.setState({
+            isLoading: false,
             value: valueToSet,
             lastUserCall: getCurrentTimeInMs(),
         })
@@ -227,7 +245,8 @@ export class ThermostatValue extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        setValueToTecoApi(this.props.postRequestData, this.props.id, this.state.valueToSet, this.setValueAfterSuccessfulCall);
+        this.setState({isLoading: true});
+        setValueToTecoApi(this.props.postRequestData, this.props.id, this.state.valueToSet, this.setValueAfterSuccessfulCall, this.setLoadingOff);
         this.changeState();
     }
 
@@ -237,6 +256,7 @@ export class ThermostatValue extends React.Component {
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
             this.setState({value: this.props.newValue});
         let innerSpace = [];
+        let innerItem  = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' °C' : <LoaderSmaller/>;
         if (!this.state.isStateSetValue) {
             innerSpace.push(
                 <a key={"SUB"} href={"/#"} onClick={() => {
@@ -244,7 +264,7 @@ export class ThermostatValue extends React.Component {
                     //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
                 }}>
                     <div>
-                        {this.state.name}{' = ' + this.state.value + ' °C'}
+                        {innerItem}
                     </div>
                 </a>
             );
@@ -280,12 +300,18 @@ export class BooleanGridItem extends React.Component {
             name: props.name,
             value: "",
             lastUserCall: 0,
+            isLoading: false
         };
         this.setValueAfterSuccesfulCall = this.setValueAfterSuccesfulCall.bind(this);
     }
 
+    setLoadingOff(){
+        this.setState({isLoading: false});
+    }
+
     setValueAfterSuccesfulCall(valueToSet) {
         this.setState({
+            isLoading: false,
             value: valueToSet,
             lastUserCall: getCurrentTimeInMs(),
         })
@@ -293,8 +319,9 @@ export class BooleanGridItem extends React.Component {
 
     // set value
     switchOnOff() {
+        this.setState({isLoading: true});
         const valueToSet = !this.state.value;
-        setValueToTecoApi(this.props.postRequestData, this.props.id, valueToSet, this.setValueAfterSuccesfulCall)
+        setValueToTecoApi(this.props.postRequestData, this.props.id, valueToSet, this.setValueAfterSuccesfulCall, this.setLoadingOff)
     }
 
     render() {
@@ -303,13 +330,14 @@ export class BooleanGridItem extends React.Component {
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
             this.setState({value: this.props.newValue});
         // the 1st tag is to make it click-able
+        let innerItem  = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value : <LoaderSmaller/>;
         return (
             <a href={"/#"} className="grid-item" onClick={() => {
                 this.switchOnOff();
                 //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
             }}>
                 <div>
-                    {this.state.name}{' = ' + this.state.value}
+                    {innerItem}
                 </div>
             </a>
         );

@@ -1,4 +1,8 @@
 import React from "react";
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
 export function createLocalhostLoginForm(handleChange, handleSubmit, ipAddr, username, pw) {
     return (
@@ -50,22 +54,79 @@ export class TecoRouteLoginForm extends React.Component {
     render() {
         // the 1st tag is to make it click-able
         return (
-            <form onSubmit={this.props.handleSubmit}>
-                <div className={"leftTextAlign"}>TecoApi</div>
-                <input type="text" value={this.props.username} onChange={this.props.handleChange}
-                       name="username" placeholder="Username (TecoApi)" required/>
-                <input type="password" value={this.props.password} onChange={this.props.handleChange}
-                       name="password" autoComplete="on" placeholder="Password (TecoApi)" required/>
-                <div className={"leftTextAlign"}>TecoRoute</div>
-                <input type="text" value={this.props.tecoRouteUsername} onChange={this.props.handleChange}
-                       name="tecoRouteUsername" placeholder="Username (TecoRoute)" required/>
-                <input type="password" value={this.props.tecoRoutePw} onChange={this.props.handleChange}
-                       name="tecoRoutePw" autoComplete="on" placeholder="Password (TecoRoute)" required/>
-                <input type="text" value={this.props.plcName} onChange={this.props.handleChange}
-                       name="plcName" placeholder="Name of PLC" required/>
+            <div>
+                <form onSubmit={this.props.handleSubmit}>
+                    <div className={"leftTextAlign"}>TecoApi</div>
 
-                <input type="submit" value="Connect"/>
-            </form>
+                    <InputGroup className="mb-1">
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">Username</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl
+                            value={this.props.username} onChange={this.props.handleChange}
+                            name="username"
+                            aria-label="Username"
+                            aria-describedby="basic-addon1"
+                            required
+                        />
+                    </InputGroup>
+
+                    <InputGroup className="mb-1">
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">Password</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <Form.Control
+                            value={this.props.password} onChange={this.props.handleChange}
+                            name="password" autoComplete="on"
+                            type="password"
+                            aria-describedby="basic-addon1"
+                            required
+                        />
+                    </InputGroup>
+                    <div className={"leftTextAlign"}>TecoRoute</div>
+                    <InputGroup className="mb-1">
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">Username</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl
+                            value={this.props.tecoRouteUsername} onChange={this.props.handleChange}
+                            name="tecoRouteUsername"
+                            aria-label="Username"
+                            aria-describedby="basic-addon1"
+                            required
+                        />
+                    </InputGroup>
+
+                    <InputGroup className="mb-1">
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">Password</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <Form.Control
+                            value={this.props.tecoRoutePw} onChange={this.props.handleChange}
+                            name="tecoRoutePw" autoComplete="on"
+                            type="password"
+                            aria-describedby="basic-addon1"
+                            required
+                        />
+                    </InputGroup>
+
+                    <InputGroup className="mb-1">
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">PLC name</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl
+                            value={this.props.plcName} onChange={this.props.handleChange}
+                            name="plcName"
+                            aria-label="Username"
+                            aria-describedby="basic-addon1"
+                            required
+                        />
+                    </InputGroup>
+                    <Button variant="dark" type="submit">
+                        Connect
+                    </Button>
+                </form>
+            </div>
         );
     }
 }

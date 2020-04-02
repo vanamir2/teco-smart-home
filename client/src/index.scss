@@ -1,3 +1,41 @@
+// import bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+.btn-flat {
+    background-color: #000000;
+    color: white;
+}
+
+.btn-dark {
+    width: 100%;
+}
+
+.btn-outline-secondary {
+    width: 50%;
+    height: 35px;
+}
+
+.input-group-prepend {
+    width : 32%; /*adjust as needed*/
+    overflow: hidden;
+}
+
+.input-group-prepend text {
+    width: 100%;
+
+}
+
+// canvac
+.canvasjs-chart-canvas {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+
+}
+
+
+// app
+
 .App {
     text-align: center;
 }
@@ -27,7 +65,7 @@
 
 /* LOGIN PAGE */
 .login-form, .signUp {
-    width: 300px;
+    width: 350px;
     margin: 0 auto;
     font-family: 'Quicksand', sans-serif;
     text-align: center;
@@ -44,6 +82,7 @@
     font-family: 'Quicksand', sans-serif;
     display: inline-block;
     text-align: right;
+
 }
 
 .login-form-withoutNewLine {
@@ -76,7 +115,6 @@
     width: 100%;
     padding: 15px;
     border: 1px solid #dddddd;
-    margin-bottom: 8px;
     box-sizing: border-box;
 }
 
@@ -151,7 +189,7 @@
     background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(0, 0, 0, 0.8);
     padding: 6px;
-    color: black;
+
     /*background-color: dodgerblue;*/
     font-family: 'Quicksand', sans-serif;
     font-size: 26px;
@@ -162,6 +200,7 @@
     width: 10%;
     float: left;
     text-align: center;
+    margin-right: 8px;
 }
 
 .leftColumnBigger {
@@ -334,5 +373,70 @@
 @keyframes dots {
     50% {
         transform: translateX(-31px);
+    }
+}
+
+// loader https://loading.io/css/
+.center {
+
+    top: 50%;
+    left: 50%;
+
+
+}
+
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 25px;
+}
+.lds-ellipsis div {
+    position: absolute;
+    top: 10px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #000000;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(24px, 0);
     }
 }

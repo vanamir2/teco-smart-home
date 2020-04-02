@@ -15,3 +15,19 @@ export class Loader extends React.Component {
         );
     }
 }
+
+export class LoaderSmaller extends React.Component {
+    render() {
+        // the 1st tag is to make it click-able
+        return (
+            <div className="center">
+                <div className="lds-ellipsis">
+                    <div/>
+                    <div/>
+                    <div/>
+                    <div/>
+                </div>
+            </div>
+        );
+    }
+}

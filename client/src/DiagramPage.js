@@ -91,7 +91,7 @@ export class DiagramPage extends React.Component {
                                                name={"Load entire day"} checked={this.state.loadEntireDaySwitch}
                                                handleChange={this.handleSwitchChange}/>
                 <form onSubmit={this.handleDateSubmit}>
-                    <label className="login-form-withoutNewLineTop" htmlFor="fname">Date&nbsp;</label>
+                    <label htmlFor="fname">Date&nbsp;</label>
                     <input type="date" id="fname" name="fname" value={this.state.dayValue}
                            onChange={event => this.setState({dayValue: event.target.value})}/>
                     <input type="submit" value="Submit"/><br/>

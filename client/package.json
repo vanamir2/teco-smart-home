@@ -14,7 +14,9 @@
     "react-scripts": "^3.3.0",
     "react-switch": "^5.0.1",
     "unit.js": "^2.1.1",
-    "node-sass": "^4.13.1"
+    "node-sass": "^4.13.1",
+    "react-bootstrap": "^1.0.0",
+    "bootstrap": "^4.4.1"
   },
   "devDependencies": {
     "esm": "^3.2.25"
