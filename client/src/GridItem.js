@@ -10,6 +10,9 @@ import {INTERVAL_BETWEEN_STATUS_REFRESH} from './dataRefresher'
 
 export const ROOM_PREFIX = 'ROOM_';
 import {LoaderSmaller} from './loader';
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
+import Button from "react-bootstrap/Button";
 
 const logger = require('logplease').create('GridItem');
 
@@ -106,7 +109,7 @@ export class Light extends React.Component {
         })
     }
 
-    setLoadingOff(){
+    setLoadingOff() {
         this.setState({isLoading: false});
     }
 
@@ -123,7 +126,8 @@ export class Light extends React.Component {
         let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
             this.setState({value: this.props.newValue});
-        let innerItem  = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' %' : <LoaderSmaller/>;
+        let innerItem = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' %' :
+            <LoaderSmaller/>;
         // the 1st tag is to make it click-able
         return (
             <a href={"/#"} className="grid-item" onClick={() => {
@@ -153,7 +157,7 @@ export class RedLight extends Light {
             src = "redLightOn.png";
             fontColor = "red-font";
         }
-        let innerItem  = this.state.isLoading === false ? this.state.name + ' ' : <LoaderSmaller/>;
+        let innerItem = this.state.isLoading === false ? this.state.name + ' ' : <LoaderSmaller/>;
 
         return (
             <div className="grid-item">
@@ -231,7 +235,7 @@ export class ThermostatValue extends React.Component {
         this.setState({[event.target.name]: event.target.value});
     }
 
-    setLoadingOff(){
+    setLoadingOff() {
         this.setState({isLoading: false});
     }
 
@@ -256,7 +260,8 @@ export class ThermostatValue extends React.Component {
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
             this.setState({value: this.props.newValue});
         let innerSpace = [];
-        let innerItem  = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' °C' : <LoaderSmaller/>;
+        let innerItem = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' °C' :
+            <LoaderSmaller/>;
         if (!this.state.isStateSetValue) {
             innerSpace.push(
                 <a key={"SUB"} href={"/#"} onClick={() => {
@@ -270,15 +275,19 @@ export class ThermostatValue extends React.Component {
             );
         } else {
             innerSpace.push(
-                <div key={"SUB"} className="set-value-item-form">
-                    <form className="set-value-item-form" onSubmit={this.handleSubmit}>
-                        <input className="set-value-item-text" type="number" value={this.state.valueToSet}
-                               min={this.props.minValue} max={this.props.maxValue} step={1} onChange={this.handleChange}
-                               name="valueToSet" placeholder="Value (°C)" required/>
-                        <input className="set-value-item-btn" type="submit" value="Set"/>
-                        <button onClick={() => this.changeState()} type="button"
-                                className="set-value-item-cancel">X
-                        </button>
+                <div key={"SUB"}>
+                    <form onSubmit={this.handleSubmit}>
+                        <InputGroup className="mb-1 custom-width">
+                            <FormControl
+                                value={this.state.valueToSet} min={this.props.minValue} max={this.props.maxValue}
+                                type="number" step={1} onChange={this.handleChange}
+                                name="valueToSet" aria-describedby="basic-addon1" placeholder="Value (°C)"
+                                variant="outline-success" required
+                            />
+                            <Button variant="outline-success" type="submit">Set</Button>
+                            <Button variant="outline-secondary" onClick={() => this.changeState()}
+                                    type="button" className="set-value-item-cancel">X</Button>
+                        </InputGroup>
                     </form>
                 </div>
             );
@@ -305,7 +314,7 @@ export class BooleanGridItem extends React.Component {
         this.setValueAfterSuccesfulCall = this.setValueAfterSuccesfulCall.bind(this);
     }
 
-    setLoadingOff(){
+    setLoadingOff() {
         this.setState({isLoading: false});
     }
 
@@ -330,7 +339,8 @@ export class BooleanGridItem extends React.Component {
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
             this.setState({value: this.props.newValue});
         // the 1st tag is to make it click-able
-        let innerItem  = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value : <LoaderSmaller/>;
+        let state = this.state.value === true ? "ON" : "OFF";
+        let innerItem = this.state.isLoading === false ? this.state.name + ' ' + state : <LoaderSmaller/>;
         return (
             <a href={"/#"} className="grid-item" onClick={() => {
                 this.switchOnOff();

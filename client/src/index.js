@@ -217,10 +217,10 @@ class Main extends React.Component {
         let gridElements = [];
         if (this.state.roomToSDSmap === undefined)
             return <Loader/>;
-         for (const [key] of this.state.roomToSDSmap.entries())
-             gridElements.push(<GridItem.Room className="grid-item"
-                                              key={key} name={key}
-                                              onClick={this.selectRoom.bind(this, key)}/>);
+        for (const [key] of this.state.roomToSDSmap.entries())
+            gridElements.push(<GridItem.Room className="grid-item"
+                                             key={key} name={key}
+                                             onClick={this.selectRoom.bind(this, key)}/>);
         return (
             <div>
                 <div className="grid-container">
@@ -279,7 +279,7 @@ class Main extends React.Component {
     }
 
     render() {
-        //return this.createRoomGrid();
+
         // <div className="loader"/>
         if (this.state.wasLoginSubmitted)
             return <Loader/>;
@@ -376,7 +376,7 @@ class Main extends React.Component {
                             </div>
                         </a>
                         <div className="rightColumn">
-                            <h1 className="signUp">
+                            <h1 className="centerIt">
                                 {this.state.selectedRoom}
                             </h1>
                         </div>

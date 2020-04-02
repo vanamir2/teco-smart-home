@@ -4,13 +4,13 @@ require("dotenv").config();
 module.exports = Object.freeze({
     //SDSS
     // ROOM 2
-    SDSS_ROOM_TEMPERATURE: 'ROOM_TcOtc3Rub3N0IDI.temp_I_REA_NA_NA_TcOtc3Rub3N0IDI_VGVtcGVyYXR1cmU',
-    SDSS_THERM_TEMPERATURE: 'ROOM_TcOtc3Rub3N0IDI.thermTemp_O_INT_m5_40_TcOtc3Rub3N0IDI_VGhlcm1vc3RhdCB0ZW1w',
-    SDSS_THERM_STATE: 'ROOM_TcOtc3Rub3N0IDI.thermState_O_BOO_0_1_TcOtc3Rub3N0IDI_VGhlcm1vc3RhdCBzdGF0ZQ',
+    SDSS_ROOM_TEMPERATURE: 'ROOM_Um9vbSAy.temp_I_REA_NA_NA_Um9vbSAy_VGVtcGVyYXR1cmU',
+    SDSS_THERM_TEMPERATURE: 'ROOM_Um9vbSAy.thermTemp_O_INT_m5_40_Um9vbSAy_VGhlcm1vc3RhdCB0ZW1w',
+    SDSS_THERM_STATE: 'ROOM_Um9vbSAy.thermState_O_BOO_0_1_Um9vbSAy_VGhlcm1vc3RhdCBzdGF0ZQ',
     // obyvaci pokoj
-    SDSS_LEFT_LIGHT: 'ROOM_T2LDvXZhY8OtIHBva29q.light_O_REA_0_100_T2LDvXZhY8OtIHBva29q_TGVmdCBMRUQ',
-    SDSS_ELECTRIC_SOCKET: 'ROOM_T2LDvXZhY8OtIHBva29q.socket_O_BOO_0_1_T2LDvXZhY8OtIHBva29q_U29ja2V0',
-    SDSS_MAGNETIC_SWITCH: 'ROOM_T2LDvXZhY8OtIHBva29q.mgnSwitch_I_BOO_0_1_T2LDvXZhY8OtIHBva29q_RG9vciBvcGVuZWQ',
+    SDSS_LEFT_LIGHT: 'ROOM_Um9vbSAx.light_O_REA_0_100_Um9vbSAx_TGVmdCBMRUQ',
+    SDSS_ELECTRIC_SOCKET: 'ROOM_Um9vbSAx.socket_O_BOO_0_1_Um9vbSAx_U29ja2V0',
+    SDSS_MAGNETIC_SWITCH: 'ROOM_Um9vbSAx.mgnSwitch_I_BOO_0_1_Um9vbSAx_RG9vciBvcGVuZWQ',
     // UTILS
     COOKIE_STRING: "RoutePLC={0};RouteLinkSave=;SoftPLC={1}",
     TECOROUTE_URL: "http://route.tecomat.com:61682/tecoapi/",
@@ -28,7 +28,7 @@ module.exports = Object.freeze({
     MEASUREMENTS_PER_HOUR: 60,
 
     // Google assistant error response
-    GA_ERROR_RESPONSE :  {
+    GA_ERROR_RESPONSE: {
         "fulfillmentText": "This is a text response",
         "fulfillmentMessages": [
             {
