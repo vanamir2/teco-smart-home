@@ -7,16 +7,31 @@
 }
 
 .btn-dark {
-    width: 100%;
+    width: 98%;
+    font-size: 18px;
+}
+
+.btn-outline-primary{
+    width: 98%;
+    font-size: 22px;
+    background-color: #def1ff;
+}
+
+.centerIt{
+    text-align: center;
+}
+
+.smallSpace{
+    height: 8px;
 }
 
 .btn-outline-secondary {
-    width: 50%;
+    width: 49%;
     height: 35px;
 }
 
 .input-group-prepend {
-    width : 32%; /*adjust as needed*/
+    width : 30%; /*adjust as needed*/
     overflow: hidden;
 }
 
@@ -25,7 +40,9 @@
 
 }
 
-// canvac
+
+
+// canvas
 .canvasjs-chart-canvas {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -33,6 +50,9 @@
 
 }
 
+canvasjs-chart-credit {
+    color: red;
+}
 
 // app
 
@@ -57,6 +77,7 @@
 
 .leftTextAlign {
     text-align: left;
+    font-weight: bold;
 }
 
 .App-link {
@@ -67,7 +88,6 @@
 .login-form, .signUp {
     width: 350px;
     margin: 0 auto;
-    font-family: 'Quicksand', sans-serif;
     text-align: center;
 }
 
@@ -79,7 +99,6 @@
 }
 
 .login-form-withoutNewLineAndWidth {
-    font-family: 'Quicksand', sans-serif;
     display: inline-block;
     text-align: right;
 
@@ -93,7 +112,6 @@
 }
 
 .login-form-withoutNewLineTop {
-    font-family: 'Quicksand', sans-serif;
     display: inline-block;
     vertical-align: top;
 }
@@ -131,8 +149,7 @@
 
 .login-form, .signUp {
     width: 300px;
-    margin: 0 auto;
-    font-family: 'Quicksand', sans-serif;
+    margin: 5px auto;
 }
 
 .signUp h1 {
@@ -155,7 +172,6 @@
 
 
 .set-value-item-form {
-    font-family: 'Quicksand', sans-serif;
     align-content: center;
 
 }
@@ -164,7 +180,6 @@
     width: 60%;
     font-size: 22px;
     padding: 2px;
-    font-family: 'Quicksand', sans-serif;
 
 }
 
@@ -172,7 +187,6 @@
     width: 26%;
     font-size: 22px;
     padding: 2px;
-    font-family: 'Quicksand', sans-serif;
 }
 
 .set-value-item-cancel {
@@ -182,7 +196,6 @@
     margin-left: 5px;
     padding: 2px;
     text-align: center;
-    font-family: 'Quicksand', sans-serif;
 }
 
 .grid-item {
@@ -191,8 +204,7 @@
     padding: 6px;
 
     /*background-color: dodgerblue;*/
-    font-family: 'Quicksand', sans-serif;
-    font-size: 26px;
+    font-size: 28px;
     text-align: center;
 }
 

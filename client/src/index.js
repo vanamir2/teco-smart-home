@@ -215,22 +215,24 @@ class Main extends React.Component {
 
     createRoomGrid() {
         let gridElements = [];
-          if (this.state.roomToSDSmap === undefined)
-              return <Loader/>;
-          for (const [key] of this.state.roomToSDSmap.entries())
-              gridElements.push(<GridItem.Room className="grid-item"
-                                               key={key} name={key}
-                                               onClick={this.selectRoom.bind(this, key)}/>);
+        if (this.state.roomToSDSmap === undefined)
+            return <Loader/>;
+         for (const [key] of this.state.roomToSDSmap.entries())
+             gridElements.push(<GridItem.Room className="grid-item"
+                                              key={key} name={key}
+                                              onClick={this.selectRoom.bind(this, key)}/>);
         return (
             <div>
                 <div className="grid-container">
                     {gridElements}
                 </div>
-                <div className="login-form">
-                    <Button variant="dark"
+                <div className="centerIt">
+                    <Button variant="outline-primary"
                             onClick={this.negateDiagramState}> Diagrams </Button>
+                    <div className="smallSpace"/>
                     <Button variant="outline-secondary"
                             onClick={this.handleSubmit}> Refresh </Button>
+                    <div className="smallSpace"/>
                     <Button variant="outline-secondary"
                             onClick={() => window.location.reload(false)}> Logout </Button>
                 </div>
@@ -252,7 +254,6 @@ class Main extends React.Component {
                 </a>
                 <p/>
                 <DiagramPage/>
-
                 <ConnectionStatusCheck
                     postRequestData={this.state.postRequestData}
                 />

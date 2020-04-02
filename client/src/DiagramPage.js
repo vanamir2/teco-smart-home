@@ -13,6 +13,7 @@ import {Loader} from "./loader";
 const logger = require('logplease').create('DiagramPage');
 
 const MAX_INT = 4294967295;
+const MIN_INT = -4294967295;
 
 const DATA_ENDPOINT = '/data';
 let graphDataTest = CanvasConstants.graphData_1day_10minutes;
@@ -96,10 +97,10 @@ export class DiagramPage extends React.Component {
                            onChange={event => this.setState({dayValue: event.target.value})}/>
                     <input type="submit" value="Submit"/><br/>
                 </form>
-                <TemperatureDiagram graphData={this.state.graphData} name={"Temperature"}/>
-                <HumidityDiagram graphData={this.state.graphData} name={"Humidity"}/>
-                <BooleanDiagram graphData={this.state.graphData} name={"True/False values"} maxValue={1}/>
-                <LightDiagram graphData={this.state.graphData} name={"Light brightness"} maxValue={100}/>
+                <TemperatureDiagram graphData={this.state.graphData} name={"Temperature [°C]"}/>
+                <HumidityDiagram graphData={this.state.graphData} name={"Humidity [%]"}/>
+                <BooleanDiagram graphData={this.state.graphData} name={"Doors and Electric socket [0/1]"} maxValue={1.05}/>
+                <LightDiagram graphData={this.state.graphData} name={"Light brightness [%]"} maxValue={101}/>
             </div>
         );
     }
@@ -107,7 +108,7 @@ export class DiagramPage extends React.Component {
 
 export class TemperatureDiagram extends React.Component {
     render() {
-        let yAxisName = "Temperature °C";
+        let yAxisName = "";
         let yAxisAllFields = ["temperature_inner", "temperature_outer"];
         let yAxisAllNames = ["Embedded sensor", "2nd sensor"];
         return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames, this.props.maxValue);
@@ -116,7 +117,7 @@ export class TemperatureDiagram extends React.Component {
 
 export class HumidityDiagram extends React.Component {
     render() {
-        let yAxisName = "Humidity [%]";
+        let yAxisName = "";
         let yAxisAllFields = ["humidity_inner"];
         let yAxisAllNames = ["Humidity inner sensor"];
         return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames, this.props.maxValue);
@@ -125,7 +126,7 @@ export class HumidityDiagram extends React.Component {
 
 export class BooleanDiagram extends React.Component {
     render() {
-        let yAxisName = "True/False";
+        let yAxisName = "";
         let yAxisAllFields = ["doorOpened", "electricSocket"];
         let yAxisAllNames = ["Door opened", "Socket on"];
         return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames, this.props.maxValue);
@@ -134,7 +135,7 @@ export class BooleanDiagram extends React.Component {
 
 export class LightDiagram extends React.Component {
     render() {
-        let yAxisName = "Light diagram";
+        let yAxisName = "";
         let yAxisAllFields = ["light"];
         let yAxisAllNames = ["Light brightness"];
         return createCanvasDiagram(this.props.graphData, this.props.name, yAxisName, yAxisAllFields, yAxisAllNames, this.props.maxValue);
@@ -167,11 +168,16 @@ function getValue(value) {
 function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAllNames, maximum) {
     let dataArr = [];
     let minimum = MAX_INT;
+    let currentMaximum = MIN_INT;
+
+    let numberOfItems = yAxisAllFields.length;
+    let showLegend = numberOfItems >= 2;
 
     for (let yAxis of yAxisAllFields) {
         let innerDataArr = [];
         for (let field of graphData) {
-            minimum = minimum > field[yAxis] ? minimum = field[yAxis] : minimum;
+            minimum = minimum > field[yAxis] ? field[yAxis] : minimum;
+            currentMaximum = currentMaximum < field[yAxis] ? field[yAxis] : currentMaximum;
             innerDataArr.push(
                 {
                     x: parseISOStringToDate(field.plcSaveTs),
@@ -181,7 +187,8 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
         }
         dataArr.push(innerDataArr);
     }
-    console.log(JSON.stringify(dataArr));
+    logger.debug(JSON.stringify(dataArr));
+    let range = currentMaximum - minimum;
 
     const options = {
         animationEnabled: true,
@@ -198,13 +205,14 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
             }
         },
         axisY: {
+
             title: yAxisName,
             crosshair: {
                 enabled: true
             },
             // https://canvasjs.com/docs/charts/chart-options/axisx/minimum/
-            minimum: MAX_INT === minimum ? null : minimum - 0.1,
-            maximum: maximum === undefined ? null : maximum
+            minimum: MAX_INT === minimum ? null : minimum - range*0.08,
+            maximum: maximum === undefined ? currentMaximum + range*0.04 : maximum
         },
         toolTip: {
             shared: true
@@ -217,7 +225,7 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
         },
         data: [{
             type: "line",
-            showInLegend: true,
+            showInLegend: showLegend,
             name: yAxisAllNames[0],
             markerType: "square",
             xValueFormatString: "DD/MMM - HH:mm",
@@ -225,13 +233,13 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
             dataPoints: dataArr[0]
         }, {
             type: "line",
-            showInLegend: true,
+            showInLegend: showLegend,
             name: yAxisAllNames[1],
             lineDashType: "dash",
             dataPoints: dataArr[1]
         }, {
             type: "line",
-            showInLegend: true,
+            showInLegend: showLegend,
             name: yAxisAllNames[2],
             lineDashType: "dash",
             color: "#737df0",
