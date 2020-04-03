@@ -155,7 +155,7 @@ function getColorByType(itemType) {
     if (itemType === DataSourceUtils.BLUE_LIGHT)
         return "blue";
     if (itemType === DataSourceUtils.LIGHT)
-        return "yellow";
+        return "#ffc85d";
 }
 
 export class ReadOnly extends React.Component {
