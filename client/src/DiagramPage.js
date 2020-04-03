@@ -1,15 +1,12 @@
 import React from 'react';
 import CanvasJSReact from './canvas/canvasjs.react';
-
-var CanvasJS = CanvasJSReact.CanvasJS;
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
-
 import * as CanvasConstants from './canvas/CanvasConstants';
 import axios from "axios";
 import {REQUEST_TIMEOUT} from "./GridItem";
 import * as ComponentUtils from "./ComponentUtils";
 import {Loader} from "./loader";
 
+const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const logger = require('logplease').create('DiagramPage');
 
 const MAX_INT = 4294967295;
@@ -85,7 +82,7 @@ export class DiagramPage extends React.Component {
             <div>
                 <a href={"/#"} className="active_chat" onClick={this.handleDateSubmit}>
                     <div className="rightColumn2">
-                        <img className="center" height="30" width="30" src="refresh.png" alt="Logo" title="Refresh"/>
+                        <i style={{fontSize:"35px",color:"black"}} className="fa fa-refresh" title="Refresh"/>
                     </div>
                 </a>
                 <ComponentUtils.MaterialSwitch customClass={"login-form-withoutNewLineAndWidth"}

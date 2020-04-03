@@ -15,5 +15,13 @@ ngrok http --host-header=rewrite {port}
  
  React & Bootstrap:<br/>
  https://react-bootstrap.github.io/getting-started/introduction/
+ 
+ React styling:
+ https://www.w3schools.com/react/react_css.asp
+ 
+ Font Awesome:
+ https://www.w3schools.com/icons/fontawesome_icons_intro.asp
+ https://www.npmjs.com/package/font-awesome
+ https://github.com/FortAwesome/react-native-fontawesome
 
 

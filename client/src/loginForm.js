@@ -116,15 +116,10 @@ export class TecoRouteLoginForm extends React.Component {
                         </InputGroup.Prepend>
                         <FormControl
                             value={this.props.plcName} onChange={this.props.handleChange}
-                            name="plcName"
-                            aria-label="Username"
-                            aria-describedby="basic-addon1"
-                            required
+                            name="plcName" aria-label="Username" aria-describedby="basic-addon1" required
                         />
                     </InputGroup>
-                    <Button variant="dark" type="submit">
-                        Connect
-                    </Button>
+                    <Button variant="dark" type="submit"> Connect </Button>
                 </form>
             </div>
         );

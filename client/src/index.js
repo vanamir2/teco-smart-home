@@ -206,7 +206,7 @@ class Main extends React.Component {
         return (
             <div className="login-form">
 
-                <h1>Teco connection</h1>
+                <h1>Teco connection <i className="fa fa-home"/></h1>
                 {localHostSwitch}
                 {loginForm}
             </div>
@@ -228,14 +228,16 @@ class Main extends React.Component {
                 </div>
                 <div className="centerIt">
                     <Button variant="outline-primary"
-                            onClick={this.negateDiagramState}> Diagrams </Button>
+                            onClick={this.negateDiagramState}>Stats <i className="fa fa-bar-chart"/></Button>
                     <div className="smallSpace"/>
                     <Button variant="outline-secondary"
-                            onClick={this.handleSubmit}> Refresh </Button>
+                            onClick={this.handleSubmit}>Refresh <i className="fa fa-refresh"/></Button>
                     <div className="smallSpace"/>
                     <Button variant="outline-secondary"
-                            onClick={() => window.location.reload(false)}> Logout </Button>
+                            onClick={() => window.location.reload(false)}>Logout <i
+                        className="fa fa-sign-out"/></Button>
                 </div>
+
                 <ConnectionStatusCheck
                     postRequestData={this.state.postRequestData}
                 />
@@ -248,8 +250,7 @@ class Main extends React.Component {
             <div>
                 <a href={"/#"} className="active_chat" onClick={this.negateDiagramState}>
                     <div className="leftColumn">
-                        <img className="center" height="35" width="35" src="return-button.svg" alt="Back button"
-                             title="Back"/>
+                        <i style={{fontSize: "35px", color: "black"}} className="fa fa-arrow-left" title="Back button"/>
                     </div>
                 </a>
                 <p/>
@@ -279,7 +280,8 @@ class Main extends React.Component {
     }
 
     render() {
-
+        //return this.createDiagramPage();
+        // return (<button>Krasno <i className="fa fa-area-chart"/></button>);
         // <div className="loader"/>
         if (this.state.wasLoginSubmitted)
             return <Loader/>;
@@ -346,33 +348,35 @@ class Main extends React.Component {
                                                   name={name}
                                                   newValue={value}
                         />);
-                } else if (itemType === DataSourceUtils.RED_LIGHT) {
+                } else if (itemType === DataSourceUtils.RED_LIGHT || itemType === DataSourceUtils.BLUE_LIGHT || itemType === DataSourceUtils.GREEN_LIGHT || itemType === DataSourceUtils.LIGHT) {
                     roomElements.push(
-                        <GridItem.RedLight className="grid-item"
-                                           id={dataSourceString}
-                                           key={dataSourceString}
-                                           postRequestData={this.state.postRequestData}
-                                           name={name}
-                                           newValue={value}
+                        <GridItem.Light className="grid-item"
+                                        id={dataSourceString}
+                                        key={dataSourceString}
+                                        postRequestData={this.state.postRequestData}
+                                        name={name}
+                                        newValue={value}
+                                        itemType={itemType}
                         />)
                 } else roomElements.push(
-                    <GridItem.Light className="grid-item"
-                                    id={dataSourceString}
-                                    key={dataSourceString}
-                                    postRequestData={this.state.postRequestData}
-                                    name={name}
-                                    newValue={value}
+                    <GridItem.ReadOnly
+                        id={dataSourceString}
+                        postRequestData={this.state.postRequestData}
+                        name={name}
+                        newValue={value}
+                        unit={unit}
                     />);
             }
 
             // automaticky bere obrazek z public slozky
             return (
                 <div>
+                    <p/>
                     <div>
                         <a href={"/#"} className="active_chat" onClick={() => this.unselectRoom()}>
                             <div className="leftColumn">
-                                <img className="center" height="42" width="42" src="return-button.svg" alt="Logo"
-                                     title="Back"/>
+                                <i style={{fontSize: "35px", color: "black"}} className="fa fa-arrow-left"
+                                   title="Back button"/>
                             </div>
                         </a>
                         <div className="rightColumn">

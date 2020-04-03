@@ -37,3 +37,6 @@ export function createSDSStoValueMap(SDSSList) {
 export const BOOLEAN_DATA_TYPE = "BOO";
 
 export const RED_LIGHT = "lightRed";
+export const BLUE_LIGHT = "lightBlue";
+export const GREEN_LIGHT = "lightGreen";
+export const LIGHT = "light";

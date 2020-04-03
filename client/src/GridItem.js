@@ -1,19 +1,18 @@
 import React from 'react';
 import axios from "axios";
 import {SimpleDataSource} from "./SimpleDataSource";
+import {LoaderSmaller} from './loader';
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
+import Button from "react-bootstrap/Button";
+import {INTERVAL_BETWEEN_STATUS_REFRESH} from './dataRefresher'
+import * as DataSourceUtils from "./DataSourceUtils";
 
 export const TECO_ROUTE_LOGIN_ENDPOINT = '/tecoRouteLogin';
 export const TECO_API_ENDPOINT = '/TecoApi';
 export const TECO_ROUTE_WITH_COOKIE_ENDPOINT = '/TecoApiViaTecoRouteWithCookie';
 export const REQUEST_TIMEOUT = 7000;
-import {INTERVAL_BETWEEN_STATUS_REFRESH} from './dataRefresher'
-
 export const ROOM_PREFIX = 'ROOM_';
-import {LoaderSmaller} from './loader';
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import Button from "react-bootstrap/Button";
-
 const logger = require('logplease').create('GridItem');
 
 // při založení tlačítka se mu předá property onClick, které bude zajišťovat reakci na stisk
@@ -128,50 +127,35 @@ export class Light extends React.Component {
             this.setState({value: this.props.newValue});
         let innerItem = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' %' :
             <LoaderSmaller/>;
+        let showIcon = this.state.value >= 1;
+        let style = showIcon ? "" : "none";
+        let colorStyle = showIcon ? getColorByType(this.props.itemType) : null;
         // the 1st tag is to make it click-able
         return (
             <a href={"/#"} className="grid-item" onClick={() => {
                 this.switchOnOff();
                 //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
             }}>
-                <div>
+                <div className={"leftColumnBigger"}>
                     {innerItem}
+                </div>
+                <div className="rightColumn2">
+                    <i style={{display: style, color: colorStyle}} className="fa fa-lightbulb-o"/>
                 </div>
             </a>
         );
     }
 }
 
-export class RedLight extends Light {
-
-    render() {
-        let src = "redLightOff.png";
-        let fontColor = "";
-
-        // Set newer value if it wasnt already refreshed by user click.
-        let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
-        if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
-            this.setState({value: this.props.newValue});
-        // the 1st tag is to make it click-able
-        if (this.state.value === 100) {
-            src = "redLightOn.png";
-            fontColor = "red-font";
-        }
-        let innerItem = this.state.isLoading === false ? this.state.name + ' ' : <LoaderSmaller/>;
-
-        return (
-            <div className="grid-item">
-                <a href={"/#"} onClick={() => this.switchOnOff()}>
-                    <div className={"leftColumnBigger"}>
-                        <div className={fontColor}>{innerItem}</div>
-                    </div>
-                    <div className="rightColumn2">
-                        <img className="margin" height="32" width="32" src={src} alt="Logo"/>
-                    </div>
-                </a>
-            </div>
-        );
-    }
+function getColorByType(itemType) {
+    if (itemType === DataSourceUtils.RED_LIGHT)
+        return "red";
+    if (itemType === DataSourceUtils.GREEN_LIGHT)
+        return "greenyellow";
+    if (itemType === DataSourceUtils.BLUE_LIGHT)
+        return "blue";
+    if (itemType === DataSourceUtils.LIGHT)
+        return "yellow";
 }
 
 export class ReadOnly extends React.Component {
@@ -339,15 +323,23 @@ export class BooleanGridItem extends React.Component {
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
             this.setState({value: this.props.newValue});
         // the 1st tag is to make it click-able
-        let state = this.state.value === true ? "ON" : "OFF";
+        let isOn = this.state.value === true;
+        let state = isOn ? "ON" : "OFF";
+        logger.info("Show icon:" + isOn);
+        logger.info("value:" + this.state.value);
+        let style = isOn ? "" : "none";
+        logger.info("style:" + style);
         let innerItem = this.state.isLoading === false ? this.state.name + ' ' + state : <LoaderSmaller/>;
         return (
             <a href={"/#"} className="grid-item" onClick={() => {
                 this.switchOnOff();
                 //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
             }}>
-                <div>
+                <div className={"leftColumnBigger"}>
                     {innerItem}
+                </div>
+                <div className="rightColumn2">
+                    <i style={{display: style}} className="far fa-check-circle"/>
                 </div>
             </a>
         );
