@@ -22,7 +22,7 @@ class Main extends React.Component {
             password: "admin",
             // TecoRoute
             tecoRouteUsername: "miroslav.vana",
-            tecoRoutePw: "12345678",
+            tecoRoutePw: "",
             plcName: "kufr01",
 
             // ---------------
