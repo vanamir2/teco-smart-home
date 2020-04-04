@@ -1,25 +1,14 @@
 import React from 'react';
-import CanvasJSReact from './canvas/canvasjs.react';
-import * as CanvasConstants from './canvas/CanvasConstants';
+import CanvasJSReact from '../canvas/canvasjs.react';
 import axios from "axios";
-import {REQUEST_TIMEOUT} from "./GridItem";
-import * as ComponentUtils from "./ComponentUtils";
+import {REQUEST_TIMEOUT} from "./gridItem";
+import * as ComponentUtils from "./componentUtils";
 import {Loader} from "./loader";
+import {getCurrentDataForDiagramPage, MAX_INT, MIN_INT} from '../utils';
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const logger = require('logplease').create('DiagramPage');
-
-const MAX_INT = 4294967295;
-const MIN_INT = -4294967295;
-
 const DATA_ENDPOINT = '/data';
-let graphDataTest = CanvasConstants.graphData_1day_10minutes;
-
-Date.prototype.toDateInputValue = (function () {
-    var local = new Date(this);
-    local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-    return local.toJSON().slice(0, 10);
-});
 
 export class DiagramPage extends React.Component {
     constructor(props) {
@@ -27,7 +16,7 @@ export class DiagramPage extends React.Component {
         this.state = {
             graphData: null,
             loadEntireDaySwitch: false,
-            dayValue: new Date().toDateInputValue()
+            dayValue: getCurrentDataForDiagramPage()
         };
         this.handleSwitchChange = this.handleSwitchChange.bind(this);
         this.handleDateSubmit = this.handleDateSubmit.bind(this);
@@ -61,13 +50,11 @@ export class DiagramPage extends React.Component {
                 alert('Request to read data failed. Error: ' + JSON.stringify(response.data.error));
                 return;
             }
-            console.log(response.data);
             this.setState({graphData: response.data});
         }).catch((error) => {
-            if (error.response) {
+            if (error.response)
                 alert(error.response.data);
-                console.log(error.response.data);
-            } else
+            else
                 alert('No answer from backend server: ' + error);
         });
     }
@@ -82,7 +69,7 @@ export class DiagramPage extends React.Component {
             <div>
                 <a href={"/#"} className="active_chat" onClick={this.handleDateSubmit}>
                     <div className="rightColumn2">
-                        <i style={{fontSize:"35px",color:"black"}} className="fa fa-refresh" title="Refresh"/>
+                        <i style={{fontSize: "35px", color: "black"}} className="fa fa-refresh" title="Refresh"/>
                     </div>
                 </a>
                 <ComponentUtils.MaterialSwitch customClass={"login-form-withoutNewLineAndWidth"}
@@ -96,7 +83,8 @@ export class DiagramPage extends React.Component {
                 </form>
                 <TemperatureDiagram graphData={this.state.graphData} name={"Temperature [°C]"}/>
                 <HumidityDiagram graphData={this.state.graphData} name={"Humidity [%]"}/>
-                <BooleanDiagram graphData={this.state.graphData} name={"Doors and Electric socket [0/1]"} maxValue={1.05}/>
+                <BooleanDiagram graphData={this.state.graphData} name={"Doors and Electric socket [0/1]"}
+                                maxValue={1.05}/>
                 <LightDiagram graphData={this.state.graphData} name={"Light brightness [%]"} maxValue={101}/>
             </div>
         );
@@ -149,7 +137,7 @@ export function createAllDiagrams() {
 const TIMEZONE_CORRECTION = '+0200';
 
 // TECO saves +0200 timezone as UTC (+0) timezone. This method repair timezone.
-export function parseISOStringToDate(isoDate) {
+function parseISOStringToDate(isoDate) {
     let isoDateWithoutTimezone = isoDate.substring(0, isoDate.length - 1);
     return new Date(isoDateWithoutTimezone + TIMEZONE_CORRECTION);
 }
@@ -208,8 +196,8 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
                 enabled: true
             },
             // https://canvasjs.com/docs/charts/chart-options/axisx/minimum/
-            minimum: MAX_INT === minimum ? null : minimum - range*0.08,
-            maximum: maximum === undefined ? currentMaximum + range*0.04 : maximum
+            minimum: MAX_INT === minimum ? null : minimum - range * 0.08,
+            maximum: maximum === undefined ? currentMaximum + range * 0.04 : maximum
         },
         toolTip: {
             shared: true

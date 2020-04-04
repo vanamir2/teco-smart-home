@@ -1,28 +1,24 @@
-// SDSfreshDataMap
-
 import React from 'react';
 import axios from "axios";
-import {TECO_API_ENDPOINT, TECO_ROUTE_WITH_COOKIE_ENDPOINT, ROOM_PREFIX} from "./GridItem";
-import {createSDSStoValueMap} from "./DataSourceUtils";
-import * as Constants from "./constants";
-import {getPostRequestWithNewCommand} from "./utils";
-
+import {TECO_API_ENDPOINT, TECO_ROUTE_WITH_COOKIE_ENDPOINT, ROOM_PREFIX} from "../components/gridItem";
+import {createSDSStoValueMap} from "../dataSource/dataSourceUtils";
+import * as Constants from "../constants";
+import {getPostRequestWithNewCommand} from "../utils";
 
 const logger = require('logplease').create('dataRefresher');
-export const INTERVAL_BETWEEN_STATUS_REFRESH = 5000;
+export const INTERVAL_BETWEEN_STATUS_REFRESH = 500;
 const TIMEOUT = 6000;
 
-
-
 export class DataRefresher extends React.Component {
+    // to prevent memory leak https://www.robinwieruch.de/react-warning-cant-call-setstate-on-an-unmounted-component
+    _isMounted = false;
     state = {
         lastDataRefresh: undefined
     };
 
-
     componentDidMount() {
+        this._isMounted = true;
         this.refreshData();
-
         this.interval = setInterval(() => {
             this.refreshData();
         }, INTERVAL_BETWEEN_STATUS_REFRESH);
@@ -43,11 +39,13 @@ export class DataRefresher extends React.Component {
             // create and insert map
             let SDSSmap = createSDSStoValueMap(roomData);
             this.props.insertSDSSfreshDataMap(SDSSmap);
-            this.setState({lastDataRefresh: new Date()});
+            if (this._isMounted)
+                this.setState({lastDataRefresh: new Date()});
         }).catch((error) => logger.error(error)); // log error if catched
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         clearInterval(this.interval);
     }
 
@@ -56,6 +54,7 @@ export class DataRefresher extends React.Component {
             return <div/>;
         let dateTime = new Date();
         dateTime.toLocaleString();
-        return <div className="connectionStatusFooterLeft"> {`Last refresh: ${this.state.lastDataRefresh.toLocaleTimeString()}`}</div>;
+        return <div
+            className="connectionStatusFooterLeft"> {`Last refresh: ${this.state.lastDataRefresh.toLocaleTimeString()}`}</div>;
     }
 }

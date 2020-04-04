@@ -1,12 +1,12 @@
 import React from 'react';
 import axios from "axios";
-import {SimpleDataSource} from "./SimpleDataSource";
+import {SimpleDataSource} from "../dataSource/SimpleDataSource";
 import {LoaderSmaller} from './loader';
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
-import {INTERVAL_BETWEEN_STATUS_REFRESH} from './dataRefresher'
-import * as DataSourceUtils from "./DataSourceUtils";
+import {INTERVAL_BETWEEN_STATUS_REFRESH} from '../schedule/dataRefresher'
+import * as DataSourceUtils from "../dataSource/dataSourceUtils";
 
 export const TECO_ROUTE_LOGIN_ENDPOINT = '/tecoRouteLogin';
 export const TECO_API_ENDPOINT = '/TecoApi';
@@ -41,13 +41,8 @@ export class Room extends React.Component {
     render() {
         // the 1st tag is to make it click-able
         return (
-            <a href={"/#"} className="grid-item" onClick={() => {
-                this.state.onClick();
-                //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
-            }}>
-                <div>
-                    {this.state.name}
-                </div>
+            <a href={"/#"} className="grid-item" onClick={() => this.state.onClick()}>
+                {this.state.name}
             </a>
         );
     }
@@ -58,14 +53,12 @@ function getRoomPrefixSelectorFromSDSS(sdss) {
     return ROOM_PREFIX + new SimpleDataSource(sdss).roomBase64 + '.'
 }
 
-// TODO - refactor to tecoApi.js
 function setValueToTecoApi(postRequestData, itemId, valueToSet, onSucces, onFail) {
     const axiosWithTimeout = axios.create({timeout: REQUEST_TIMEOUT});
 
     // deep copy of postRequestData
     let data = JSON.parse(JSON.stringify(postRequestData));
     data['command'] = 'SetObject?' + getRoomPrefixSelectorFromSDSS(itemId) + itemId + '=' + valueToSet;
-    console.log(data);
     let endPoint = data['plcName'] !== undefined ? TECO_ROUTE_WITH_COOKIE_ENDPOINT : TECO_API_ENDPOINT;
 
     axiosWithTimeout.post(endPoint, data).then((response) => {
@@ -78,7 +71,7 @@ function setValueToTecoApi(postRequestData, itemId, valueToSet, onSucces, onFail
         onFail();
         if (error.response) {
             alert(error.response.data);
-            console.log(error.response.data);
+            logger.error(error.response.data);
         } else {
             alert('No answer from PLC: ' + data);
         }
@@ -119,12 +112,11 @@ export class Light extends React.Component {
         setValueToTecoApi(this.props.postRequestData, this.props.id, valueToSet, this.setValueAfterSuccessfulCall, this.setLoadingOff)
     }
 
-    // TODO - toto je stejne jako gridItem BooleanGridItem
     render() {
         // Set newer value if it wasnt already refreshed by user click.
         let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
-            this.setState({value: this.props.newValue});
+            this.state.value = this.props.newValue;
         let innerItem = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' %' :
             <LoaderSmaller/>;
         let showIcon = this.state.value >= 1;
@@ -132,10 +124,7 @@ export class Light extends React.Component {
         let colorStyle = showIcon ? getColorByType(this.props.itemType) : null;
         // the 1st tag is to make it click-able
         return (
-            <a href={"/#"} className="grid-item" onClick={() => {
-                this.switchOnOff();
-                //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
-            }}>
+            <a href={"/#"} className="grid-item" onClick={() => this.switchOnOff()}>
                 <div className={"leftColumnBigger"}>
                     {innerItem}
                 </div>
@@ -162,7 +151,6 @@ export class ReadOnly extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: props.id,
             name: props.name,
             onClick: props.onClick,
             value: "",
@@ -182,7 +170,7 @@ export class ReadOnly extends React.Component {
         // Set newer value if it wasnt already refreshed by user click.
         let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
-            this.setState({value: this.props.newValue});
+            this.state.value = this.props.newValue;
         // the 1st tag is to make it click-able
         return (
             <div className="grid-item">
@@ -242,16 +230,13 @@ export class ThermostatValue extends React.Component {
         // Set newer value if it wasnt already refreshed by user click.
         let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
-            this.setState({value: this.props.newValue});
+            this.state.value = this.props.newValue;
         let innerSpace = [];
         let innerItem = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' °C' :
             <LoaderSmaller/>;
         if (!this.state.isStateSetValue) {
             innerSpace.push(
-                <a key={"SUB"} href={"/#"} onClick={() => {
-                    this.changeState();
-                    //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
-                }}>
+                <a key={"SUB"} href={"/#"} onClick={() => this.changeState()}>
                     <div>
                         {innerItem}
                     </div>
@@ -321,20 +306,14 @@ export class BooleanGridItem extends React.Component {
         // Set newer value if it wasnt already refreshed by user click.
         let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
-            this.setState({value: this.props.newValue});
+            this.state.value = this.props.newValue;
         // the 1st tag is to make it click-able
         let isOn = this.state.value === true;
         let state = isOn ? "ON" : "OFF";
-        logger.info("Show icon:" + isOn);
-        logger.info("value:" + this.state.value);
         let style = isOn ? "" : "none";
-        logger.info("style:" + style);
         let innerItem = this.state.isLoading === false ? this.state.name + ' ' + state : <LoaderSmaller/>;
         return (
-            <a href={"/#"} className="grid-item" onClick={() => {
-                this.switchOnOff();
-                //console.log('AKTIVNI CHAT UVNITR CHAT ELEMENTU: ' + this.state.activeChat());
-            }}>
+            <a href={"/#"} className="grid-item" onClick={() => this.switchOnOff()}>
                 <div className={"leftColumnBigger"}>
                     {innerItem}
                 </div>

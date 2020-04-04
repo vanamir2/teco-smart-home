@@ -18,9 +18,11 @@
     "react-bootstrap": "^1.0.0",
     "bootstrap": "^4.4.1",
     "@fortawesome/fontawesome-free": "^5.13.0"
+
   },
   "devDependencies": {
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "dotenv": "^8.2.0"
   },
   "proxy": "http://localhost:5000/",
   "scripts": {

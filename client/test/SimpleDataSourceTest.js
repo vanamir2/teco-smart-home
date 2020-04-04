@@ -1,4 +1,4 @@
-const SimpleDataSource = require('./../src/SimpleDataSource').SimpleDataSource;
+const SimpleDataSource = require('../src/dataSource/SimpleDataSource').SimpleDataSource;
 
 // load Unit.js module
 const test = require('unit.js');
