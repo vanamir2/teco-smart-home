@@ -6,8 +6,8 @@ import * as Constants from "../constants";
 import {getPostRequestWithNewCommand} from "../utils";
 
 const logger = require('logplease').create('dataRefresher');
-export const INTERVAL_BETWEEN_STATUS_REFRESH = 500;
-const TIMEOUT = 6000;
+export const INTERVAL_BETWEEN_STATUS_REFRESH = 2000;
+const TIMEOUT = 8000;
 
 export class DataRefresher extends React.Component {
     // to prevent memory leak https://www.robinwieruch.de/react-warning-cant-call-setstate-on-an-unmounted-component

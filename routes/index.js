@@ -66,7 +66,7 @@ router.post('/data', (req, res) => {
     logger.debug('jumpByNFields=' + jumpByNFields);
     logger.debug('day=' + dayToLoad);
 
-    AzureStorage.getData(req, res, hours, jumpByNFields, dayToLoad);
+    AzureStorage.getData( res, hours, jumpByNFields, dayToLoad);
 });
 
 // ------------------------------------------------------------------------------------------------- DEVELOPER ENDPOINTS

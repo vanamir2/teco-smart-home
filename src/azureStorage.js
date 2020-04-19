@@ -12,8 +12,11 @@ const constants = require('./constants');
  *
  * If day to load is not provided. Today is taken
  */
-module.exports.getData = (req, res, hours, jumpByNFields, dayToLoad) => {
+module.exports.getData = (res, hours, jumpByNFields, dayToLoad) => {
+    // clear global variable
+    entities = [];
     let numberOfItems = constants.MEASUREMENTS_PER_HOUR * hours;
+    logger.debug("Requested items=" + numberOfItems);
 
     // today formatted to YYYY-MM-DD
     let today = new Date().toISOString().split('T')[0];
@@ -21,23 +24,45 @@ module.exports.getData = (req, res, hours, jumpByNFields, dayToLoad) => {
     logger.debug("Day to load=" + finalDayToLoad);
 
     let query = new azure.TableQuery().where('PartitionKey eq ?', finalDayToLoad);
-    tableService.queryEntities('testTable2', query, null, (error, result, response) => {
-        let arr = [];
-        if (!error) {
-            logger.info("Number of loaded items: " + result.entries.length);
-            let len = result.entries.length;
-
-            let startingIndex = numberOfItems > len ? 0 : len - numberOfItems;
-            logger.debug("Starting index=" + startingIndex);
-            for (let i = startingIndex; i < len; i += jumpByNFields)
-                arr.push(createRow(result.entries[i]));
-
-            logger.info("Number of items in reduced set: " + arr.length);
-            res.send(arr);
-        } else
-            res.status(403).send('Azure tables query was not successful.');
-    });
+    // optimalized query in case it loads last hour of today
+    if (dayToLoad === today) {
+        let queryDate = new Date();
+        queryDate.setHours(queryDate.getHours() - hours);
+        query = new azure.TableQuery().where('PartitionKey eq ?', finalDayToLoad).and('Timestamp >= ?date?', queryDate);
+    }
+    queryEntitiesSegmented(constants.AZURE_TABLE, query, null, res, jumpByNFields, numberOfItems);
 };
+
+// https://docs.microsoft.com/en-us/rest/api/storageservices/querying-tables-and-entities
+// https://stackoverflow.com/questions/53385166/retrieving-more-than-1000-records-from-azure-storage-table-js
+var entities = [];
+function queryEntitiesSegmented(table, tableQuery, continuationToken, res, jumpByNFields, numberOfItems) {
+    tableService.queryEntities(table, tableQuery, continuationToken, (error, results, response) => {
+        if (error) {
+            logger.error(error);
+            res.status(403).send('Azure tables query was not successful.');
+        } else {
+           // logger.debug('Response=' + JSON.stringify(response));
+            entities.push.apply(entities, results.entries);
+            if (results.continuationToken) {
+                queryEntitiesSegmented(table, tableQuery, results.continuationToken, res, jumpByNFields, numberOfItems);
+            } else {
+                let entitiesSubset = [];
+                let len = entities.length;
+                logger.info("Number of loaded items: " + len);
+
+                let startingIndex = numberOfItems > len ? 0 : len - numberOfItems;
+                logger.debug("Starting index=" + startingIndex);
+                for (let i = startingIndex; i < len; i += jumpByNFields)
+                    entitiesSubset.push(createRow(entities[i]));
+
+                logger.info("Number of items in reduced set: " + entitiesSubset.length);
+                res.send(entitiesSubset.length === 0 ? "" : entitiesSubset);
+            }
+        }
+    });
+    return entities;
+}
 
 function getValueOrDefault(field, defaultValue) {
     return field === undefined ? defaultValue : field._

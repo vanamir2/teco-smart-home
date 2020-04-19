@@ -26,6 +26,8 @@ module.exports = Object.freeze({
     TECOAPI_PW: process.env.TECOAPI_PW,
     // NUMBERS
     MEASUREMENTS_PER_HOUR: 60,
+    // AZURE
+    AZURE_TABLE: 'testTable2',
 
     // Google assistant error response
     GA_ERROR_RESPONSE: {

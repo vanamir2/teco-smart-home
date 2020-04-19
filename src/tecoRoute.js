@@ -14,6 +14,7 @@ function isStatusOk(res, reject, result) {
             reject("Rejected. PLC is offline. Ensure that PLC is connected to network and try it again.");
         else
             result.status(500).send('PLC is offline. Ensure that PLC is connected to network and try it again.');
+        logger.error("Rejected. PLC is offline. Ensure that PLC is connected to network and try it again.");
         return false;
     }
     if (res.status === 200) {
@@ -21,6 +22,7 @@ function isStatusOk(res, reject, result) {
             reject("TecoRoute - login or PLC name is incorrect.");
         else
             result.status(500).send("TecoRoute - login or PLC name is incorrect.");
+        logger.error("TecoRoute - login or PLC name is incorrect.");
         return false;
     }
     return true;

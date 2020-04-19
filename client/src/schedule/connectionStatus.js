@@ -6,7 +6,7 @@ import {getPostRequestWithNewCommand} from "../utils";
 
 const logger = require('logplease').create('ConnectionStatus');
 const INTERVAL_BETWEEN_STATUS_REFRESH = 5000;
-const TIMEOUT = 6500;
+const TIMEOUT = 8000;
 const TECOAPI_STATUS = 'status';
 
 export class ConnectionStatusCheck extends React.Component {
