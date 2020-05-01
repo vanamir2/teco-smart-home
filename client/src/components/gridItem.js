@@ -117,8 +117,8 @@ export class Light extends React.Component {
         let wasInputLoadedFromUserRequest = getCurrentTimeInMs() < this.state.lastUserCall + INTERVAL_BETWEEN_STATUS_REFRESH;
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
             this.state.value = this.props.newValue;
-        let innerItem = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' %' :
-            <LoaderSmaller/>;
+        let isLoading = this.state.isLoading || this.state.value === "";
+        let innerItem = !isLoading ? this.state.name + ' = ' + this.state.value + ' %' : <LoaderSmaller/>;
         let showIcon = this.state.value >= 1;
         let style = showIcon ? "" : "none";
         let colorStyle = showIcon ? getColorByType(this.props.itemType) : null;
@@ -232,7 +232,8 @@ export class ThermostatValue extends React.Component {
         if (!wasInputLoadedFromUserRequest && this.props.newValue !== undefined && this.props.newValue !== this.state.value)
             this.state.value = this.props.newValue;
         let innerSpace = [];
-        let innerItem = this.state.isLoading === false ? this.state.name + ' = ' + this.state.value + ' °C' :
+        let isLoading = this.state.isLoading || this.state.value === "";
+        let innerItem = !isLoading ? this.state.name + ' = ' + this.state.value + ' °C' :
             <LoaderSmaller/>;
         if (!this.state.isStateSetValue) {
             innerSpace.push(
@@ -311,7 +312,8 @@ export class BooleanGridItem extends React.Component {
         let isOn = this.state.value === true;
         let state = isOn ? "ON" : "OFF";
         let style = isOn ? "" : "none";
-        let innerItem = this.state.isLoading === false ? this.state.name + ' ' + state : <LoaderSmaller/>;
+        let isLoading = this.state.isLoading || this.state.value === "";
+        let innerItem = !isLoading ? this.state.name + ' ' + state : <LoaderSmaller/>;
         return (
             <a href={"/#"} className="grid-item" onClick={() => this.switchOnOff()}>
                 <div className={"leftColumnBigger"}>

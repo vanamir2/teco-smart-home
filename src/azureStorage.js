@@ -57,6 +57,7 @@ function queryEntitiesSegmented(table, tableQuery, continuationToken, res, jumpB
                     entitiesSubset.push(createRow(entities[i]));
 
                 logger.info("Number of items in reduced set: " + entitiesSubset.length);
+                logger.debug(entitiesSubset);
                 res.send(entitiesSubset.length === 0 ? "" : entitiesSubset);
             }
         }

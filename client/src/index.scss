@@ -42,6 +42,12 @@
     overflow: hidden;
 }
 
+.input-group-text {
+    color: black;
+    background-color: rgba(230, 241, 255, 0.4);
+
+}
+
 .input-group-prepend text {
     width: 100%;
 
@@ -55,12 +61,7 @@
 
 }
 
-canvasjs-chart-credit {
-    color: red;
-}
-
 // app
-
 .App {
     text-align: center;
 }
@@ -98,7 +99,7 @@ canvasjs-chart-credit {
 
 .login-form h1 {
     text-align: center;
-    color: #4d4d4d;
+    color: #000000;
     font-size: 24px;
     padding: 20px 0 20px 0;
 }

@@ -179,7 +179,8 @@ function createCanvasDiagram(graphData, name, yAxisName, yAxisAllFields, yAxisAl
         animationEnabled: true,
         theme: "light2",
         title: {
-            text: name
+            text: name,
+            fontSize: 25, // https://canvasjs.com/docs/charts/chart-options/title/fontsize/
         },
         axisX: {
             // https://canvasjs.com/docs/charts/chart-options/axisx/valueformatstring/

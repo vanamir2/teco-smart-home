@@ -119,7 +119,7 @@ export class TecoRouteLoginForm extends React.Component {
                             name="plcName" aria-label="Username" aria-describedby="basic-addon1" required
                         />
                     </InputGroup>
-                    <Button variant="dark" type="submit"> Connect </Button>
+                    <Button variant="outline-primary" type="submit"> Connect </Button>
                 </form>
             </div>
         );

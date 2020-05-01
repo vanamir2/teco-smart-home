@@ -162,9 +162,7 @@ export function createRoomDetailPage(roomToSDSmap, selectedRoom, SDSSfreshDataMa
                     </div>
                 </a>
                 <div className="rightColumn">
-                    <h1 className="centerIt">
-                        {selectedRoom}
-                    </h1>
+                    <h3 className="centerIt">{selectedRoom}</h3>
                 </div>
             </div>
             <div className="oneColumn">
