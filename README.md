@@ -1,8 +1,8 @@
 # Teco smart home app <br/>
 Master thesis The programmable smart house <br/>
  - App source codes (web, Mosaic, Dialogflow)
- - PDF - TODO 
- - [YouTube demonstration - TODO]()
+ - [PDF](https://github.com/vanamir2/teco-smart-home/blob/master/docs/DP_Miroslav_Vana_2020.pdf)
+ - [YouTube demonstration](https://youtu.be/qqNYXxoiiHE)
  - [Server API documentation (Apiary)](https://tecosmarthome.docs.apiary.io/) 
 
 ## Web app install & run & test<br/>
