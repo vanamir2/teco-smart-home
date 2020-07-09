@@ -12,3 +12,7 @@ projectFolder> npm run dev <br/>
 projectFolder> npm run test-all <br/>
 
 Be patient. Install takes lot of time and there is no output for long period of time.
+
+
+## How does it work?<br/>
+![Alt text](docs/ArchitekturaUvodni.png?raw=true "Basic system architecture | Základní architektura systému")
