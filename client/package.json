@@ -6,7 +6,7 @@
     "name": "Miroslav Váňa"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "js-base64": "^2.5.2",
     "logplease": "^1.2.15",
     "react": "^16.6.3",
