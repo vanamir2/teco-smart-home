@@ -18,14 +18,14 @@
     "test-all": "concurrently --kill-others-on-fail \"npm run test\" \"cd client && npm run test\""
   },
   "dependencies": {
-    "express": "~4.16.1",
+    "express": "~4.18.2",
     "http-errors": "~1.6.3",
     "logplease": "^1.2.15",
     "node-fetch": "^2.6.0",
     "md5": "^2.2.1",
     "azure-storage": "^2.10.3",
     "dotenv": "^8.2.0",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "http-parser-js": "^0.5.2"
   },
   "eslintConfig": {
