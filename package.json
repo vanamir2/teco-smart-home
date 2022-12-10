@@ -18,7 +18,7 @@
     "test-all": "concurrently --kill-others-on-fail \"npm run test\" \"cd client && npm run test\""
   },
   "dependencies": {
-    "express": "~4.16.1",
+    "express": "~4.17.3",
     "http-errors": "~1.6.3",
     "logplease": "^1.2.15",
     "node-fetch": "^2.6.0",
